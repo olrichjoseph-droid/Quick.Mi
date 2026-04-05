@@ -5,1928 +5,535 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuickMi — L'aide à la personne, à la demande</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ─── RESET & BASE ─── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #FAFAF7;
-    color: #1C1C1C;
-    overflow-x: hidden;
-  }
-
-/* ─── CSS VARIABLES ─── */
-:root {
-–orange: #F26419;
-–orange-light: #FF8C4B;
-–orange-pale: #FFF1E8;
-–dark: #1C1C1C;
-–dark2: #2D2D2D;
-–cream: #FAFAF7;
-–cream2: #F4F2EC;
-–gray: #6B7280;
-–gray-light: #E5E3DC;
-–green: #059669;
-–blue: #1D4ED8;
-–radius: 20px;
-–shadow: 0 8px 40px rgba(0,0,0,0.08);
-–shadow-lg: 0 24px 60px rgba(0,0,0,0.12);
-}
-
-/* ─── TYPOGRAPHY ─── */
-.serif { font-family: ‘Fraunces’, serif; }
-h1, h2, h3 { font-family: ‘Fraunces’, serif; line-height: 1.1; letter-spacing: -0.03em; }
-
-/* ─── NAVIGATION ─── */
-nav {
-position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-padding: 18px 5%;
-display: flex; align-items: center; justify-content: space-between;
-background: rgba(250,250,247,0.92);
-backdrop-filter: blur(20px);
-border-bottom: 1px solid rgba(28,28,28,0.06);
-transition: all 0.3s ease;
-}
-nav.scrolled { box-shadow: 0 4px 30px rgba(0,0,0,0.08); }
-
-.nav-logo {
-display: flex; align-items: center; gap: 10px;
-text-decoration: none;
-}
-.logo-icon {
-width: 38px; height: 38px; border-radius: 12px;
-background: linear-gradient(135deg, var(–orange), #FFAD70);
-display: flex; align-items: center; justify-content: center;
-font-size: 18px;
-box-shadow: 0 4px 16px rgba(242,100,25,0.3);
-}
-.logo-text {
-font-family: ‘Fraunces’, serif;
-font-size: 22px; font-weight: 600;
-color: var(–dark);
-letter-spacing: -0.5px;
-}
-
-.nav-links {
-display: flex; align-items: center; gap: 32px;
-list-style: none;
-}
-.nav-links a {
-text-decoration: none;
-color: var(–dark2); font-size: 15px; font-weight: 400;
-transition: color 0.2s;
-}
-.nav-links a:hover { color: var(–orange); }
-
-.nav-cta {
-display: flex; gap: 10px; align-items: center;
-}
-.btn-nav {
-background: var(–orange);
-color: white; border: none;
-padding: 11px 24px; border-radius: 50px;
-font-family: ‘DM Sans’; font-size: 14px; font-weight: 500;
-cursor: pointer;
-transition: all 0.2s ease;
-text-decoration: none;
-box-shadow: 0 4px 16px rgba(242,100,25,0.25);
-}
-.btn-nav:hover { background: #D9570D; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(242,100,25,0.35); }
-
-.burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-.burger span { width: 24px; height: 2px; background: var(–dark); border-radius: 2px; transition: all 0.3s; }
-
-/* ─── HERO ─── */
-.hero {
-min-height: 100vh;
-padding: 120px 5% 80px;
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 60px;
-align-items: center;
-position: relative;
-overflow: hidden;
-}
-
-.hero-bg {
-position: absolute; inset: 0; pointer-events: none;
-background:
-radial-gradient(ellipse 60% 50% at 80% 20%, rgba(242,100,25,0.08) 0%, transparent 60%),
-radial-gradient(ellipse 40% 40% at 10% 80%, rgba(242,100,25,0.05) 0%, transparent 60%);
-}
-.hero-bg-dot {
-position: absolute; inset: 0;
-background-image: radial-gradient(circle, rgba(28,28,28,0.04) 1px, transparent 1px);
-background-size: 32px 32px;
-}
-
-.hero-badge {
-display: inline-flex; align-items: center; gap: 8px;
-background: var(–orange-pale);
-border: 1px solid rgba(242,100,25,0.2);
-border-radius: 50px; padding: 7px 16px;
-margin-bottom: 28px;
-animation: fadeUp 0.6s ease both;
-}
-.badge-dot {
-width: 7px; height: 7px; border-radius: 50%;
-background: var(–green);
-animation: pulse 2s infinite;
-}
-.hero-badge span { font-size: 13px; color: var(–orange); font-weight: 500; }
-
-.hero-title {
-font-size: clamp(42px, 5vw, 68px);
-font-weight: 900; margin-bottom: 24px;
-animation: fadeUp 0.6s 0.1s ease both;
-}
-.hero-title em {
-font-style: italic;
-color: var(–orange);
-display: block;
-}
-
-.hero-desc {
-font-size: 17px; line-height: 1.75;
-color: var(–gray); max-width: 480px;
-margin-bottom: 36px;
-animation: fadeUp 0.6s 0.2s ease both;
-font-weight: 300;
-}
-
-.hero-actions {
-display: flex; gap: 14px; flex-wrap: wrap;
-animation: fadeUp 0.6s 0.3s ease both;
-}
-.btn-primary {
-background: var(–orange); color: white;
-border: none; padding: 16px 36px;
-border-radius: 50px; font-family: ‘DM Sans’;
-font-size: 16px; font-weight: 500; cursor: pointer;
-transition: all 0.25s ease;
-box-shadow: 0 8px 28px rgba(242,100,25,0.3);
-text-decoration: none; display: inline-block;
-}
-.btn-primary:hover { background: #D9570D; transform: translateY(-2px); box-shadow: 0 12px 36px rgba(242,100,25,0.4); }
-.btn-outline {
-background: transparent; color: var(–dark);
-border: 1.5px solid rgba(28,28,28,0.15); padding: 15px 32px;
-border-radius: 50px; font-family: ‘DM Sans’;
-font-size: 15px; font-weight: 400; cursor: pointer;
-transition: all 0.2s;
-text-decoration: none; display: inline-block;
-}
-.btn-outline:hover { border-color: var(–orange); color: var(–orange); }
-
-.hero-stats {
-display: flex; gap: 36px; margin-top: 52px;
-padding-top: 36px;
-border-top: 1px solid var(–gray-light);
-animation: fadeUp 0.6s 0.4s ease both;
-}
-.stat-val {
-font-family: ‘Fraunces’, serif;
-font-size: 30px; font-weight: 600; color: var(–orange);
-}
-.stat-label { font-size: 12px; color: var(–gray); margin-top: 2px; letter-spacing: 0.5px; }
-
-/* ─── HERO VISUAL ─── */
-.hero-visual {
-position: relative; animation: fadeUp 0.7s 0.2s ease both;
-}
-
-.phone-mockup {
-width: 280px; height: 560px;
-background: var(–dark);
-border-radius: 44px;
-border: 8px solid #2D2D2D;
-box-shadow: 0 40px 80px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05);
-margin: 0 auto;
-position: relative; overflow: hidden;
-display: flex; flex-direction: column;
-}
-.phone-notch {
-width: 80px; height: 6px; background: #111;
-border-radius: 3px; margin: 12px auto 0;
-position: relative; z-index: 10;
-}
-.phone-screen {
-flex: 1; padding: 16px 14px;
-display: flex; flex-direction: column; gap: 10px;
-}
-.phone-header {
-display: flex; align-items: center; justify-content: space-between;
-margin-bottom: 4px;
-}
-.phone-logo { font-family: ‘Fraunces’, serif; font-size: 16px; font-weight: 600; color: white; }
-.phone-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(–orange); display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600; }
-
-.phone-card {
-background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
-border-radius: 16px; padding: 14px;
-}
-.phone-card-title { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px; letter-spacing: 0.5px; }
-.phone-card-val { font-family: ‘Fraunces’, serif; font-size: 18px; color: white; font-weight: 600; }
-.phone-card-sub { font-size: 10px; color: var(–orange); margin-top: 2px; }
-
-.phone-services { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.phone-svc {
-background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
-border-radius: 12px; padding: 10px; text-align: center;
-cursor: pointer; transition: all 0.2s;
-}
-.phone-svc:hover { background: rgba(242,100,25,0.15); border-color: rgba(242,100,25,0.3); }
-.phone-svc-icon { font-size: 20px; margin-bottom: 4px; }
-.phone-svc-name { font-size: 9px; color: rgba(255,255,255,0.6); }
-
-.phone-helper {
-background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07);
-border-radius: 14px; padding: 12px;
-display: flex; align-items: center; gap: 10px;
-}
-.helper-av {
-width: 36px; height: 36px; border-radius: 50%;
-background: linear-gradient(135deg, var(–orange), #FFAD70);
-display: flex; align-items: center; justify-content: center;
-font-size: 12px; font-weight: 700; color: white; flex-shrink: 0;
-}
-.helper-name { font-size: 12px; color: white; font-weight: 500; }
-.helper-info { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
-.helper-dot { width: 6px; height: 6px; border-radius: 50%; background: var(–green); animation: pulse 1.5s infinite; display: inline-block; }
-
-.phone-btn {
-background: var(–orange); color: white; border: none;
-border-radius: 12px; padding: 11px;
-font-family: ‘DM Sans’; font-size: 12px; font-weight: 600;
-cursor: pointer; text-align: center;
-box-shadow: 0 4px 16px rgba(242,100,25,0.3);
-}
-
-/* Floating cards around phone */
-.float-card {
-position: absolute; background: white;
-border-radius: 16px; padding: 12px 16px;
-box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-display: flex; align-items: center; gap: 10px;
-animation: float 4s ease-in-out infinite;
-white-space: nowrap;
-}
-.float-card-2 { animation-delay: -2s; }
-.float-1 { top: 40px; right: -60px; }
-.float-2 { bottom: 120px; left: -70px; }
-.float-3 { top: 200px; right: -50px; }
-.fc-icon { font-size: 20px; }
-.fc-text { font-size: 12px; }
-.fc-val { font-family: ‘Fraunces’, serif; font-weight: 600; color: var(–dark); font-size: 13px; }
-.fc-sub { color: var(–gray); font-size: 11px; margin-top: 1px; }
-
-/* ─── SECTION BASE ─── */
-section { padding: 100px 5%; }
-.section-tag {
-display: inline-block;
-background: var(–orange-pale); color: var(–orange);
-font-size: 12px; font-weight: 600; letter-spacing: 1px;
-padding: 6px 14px; border-radius: 50px;
-text-transform: uppercase; margin-bottom: 20px;
-}
-.section-title { font-size: clamp(32px, 4vw, 52px); margin-bottom: 16px; }
-.section-desc { font-size: 16px; color: var(–gray); line-height: 1.7; max-width: 520px; font-weight: 300; }
-.section-header { margin-bottom: 60px; }
-
-/* ─── SERVICES ─── */
-#services { background: var(–dark); color: white; }
-#services .section-tag { background: rgba(242,100,25,0.15); }
-#services .section-title { color: white; }
-#services .section-desc { color: rgba(255,255,255,0.5); }
-
-.services-grid {
-display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-gap: 24px;
-}
-.service-card {
-background: rgba(255,255,255,0.04);
-border: 1px solid rgba(255,255,255,0.07);
-border-radius: 24px; padding: 32px;
-transition: all 0.3s ease;
-cursor: pointer; position: relative; overflow: hidden;
-}
-.service-card::before {
-content: ‘’;
-position: absolute; inset: 0;
-background: radial-gradient(ellipse at top left, rgba(242,100,25,0.12), transparent 60%);
-opacity: 0; transition: opacity 0.3s;
-}
-.service-card:hover { border-color: rgba(242,100,25,0.4); transform: translateY(-4px); }
-.service-card:hover::before { opacity: 1; }
-
-.svc-icon {
-width: 56px; height: 56px; border-radius: 16px;
-background: rgba(242,100,25,0.12); border: 1px solid rgba(242,100,25,0.2);
-display: flex; align-items: center; justify-content: center;
-font-size: 26px; margin-bottom: 20px;
-}
-.svc-title { font-family: ‘Fraunces’, serif; font-size: 22px; font-weight: 600; margin-bottom: 6px; }
-.svc-subtitle { font-size: 13px; color: var(–orange); margin-bottom: 14px; }
-.svc-desc { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.7; font-weight: 300; }
-.svc-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
-.svc-duration { font-size: 12px; color: rgba(255,255,255,0.3); }
-.svc-price { font-family: ‘Fraunces’, serif; font-size: 15px; color: var(–orange); font-weight: 600; }
-
-/* ─── HOW IT WORKS ─── */
-#how { background: var(–cream2); }
-.steps-layout {
-display: grid; grid-template-columns: 1fr 1fr;
-gap: 80px; align-items: center;
-}
-.steps-list { display: flex; flex-direction: column; gap: 0; }
-.step-item {
-display: flex; gap: 20px;
-padding: 28px 0;
-border-bottom: 1px solid var(–gray-light);
-cursor: pointer; transition: all 0.2s;
-}
-.step-item:last-child { border-bottom: none; }
-.step-item:hover .step-num { background: var(–orange); color: white; }
-
-.step-num {
-width: 44px; height: 44px; border-radius: 12px;
-background: var(–orange-pale); color: var(–orange);
-font-family: ‘Fraunces’, serif; font-size: 18px; font-weight: 700;
-display: flex; align-items: center; justify-content: center;
-flex-shrink: 0; transition: all 0.2s;
-}
-.step-title { font-family: ‘Fraunces’, serif; font-size: 20px; font-weight: 600; margin-bottom: 6px; }
-.step-desc { font-size: 14px; color: var(–gray); line-height: 1.65; font-weight: 300; }
-
-.steps-visual {
-background: white; border-radius: 28px;
-padding: 36px; box-shadow: var(–shadow-lg);
-position: relative; overflow: hidden;
-}
-.steps-visual::after {
-content: ‘’; position: absolute;
-bottom: -40px; right: -40px;
-width: 200px; height: 200px; border-radius: 50%;
-background: radial-gradient(circle, rgba(242,100,25,0.08), transparent 70%);
-}
-.visual-timeline { display: flex; flex-direction: column; gap: 0; }
-.vt-item {
-display: flex; gap: 16px; align-items: flex-start;
-padding: 16px 0; position: relative;
-}
-.vt-item:not(:last-child)::before {
-content: ‘’;
-position: absolute; left: 15px; top: 48px;
-width: 2px; height: 100%;
-background: linear-gradient(to bottom, var(–orange-light), transparent);
-}
-.vt-dot {
-width: 32px; height: 32px; border-radius: 50%;
-background: var(–orange-pale); border: 2px solid var(–orange);
-display: flex; align-items: center; justify-content: center;
-font-size: 14px; flex-shrink: 0; z-index: 1;
-}
-.vt-text .vt-title { font-size: 14px; font-weight: 600; color: var(–dark); }
-.vt-text .vt-sub { font-size: 12px; color: var(–gray); margin-top: 2px; }
-.vt-time {
-margin-left: auto; font-family: ‘Fraunces’, serif;
-font-size: 13px; color: var(–orange); font-weight: 600;
-white-space: nowrap; padding-top: 6px;
-}
-
-/* ─── POUR QUI ─── */
-#pourqui { background: white; }
-.audience-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
-.audience-card {
-border: 1.5px solid var(–gray-light); border-radius: 24px;
-padding: 36px; transition: all 0.3s;
-}
-.audience-card:hover { border-color: var(–orange); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(242,100,25,0.08); }
-.aud-emoji { font-size: 44px; margin-bottom: 20px; }
-.aud-title { font-family: ‘Fraunces’, serif; font-size: 24px; font-weight: 600; margin-bottom: 10px; }
-.aud-desc { font-size: 14px; color: var(–gray); line-height: 1.7; font-weight: 300; margin-bottom: 20px; }
-.aud-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-.aud-tag {
-background: var(–orange-pale); color: var(–orange);
-font-size: 12px; padding: 5px 12px; border-radius: 50px; font-weight: 500;
-}
-
-/* ─── TÉMOIGNAGES ─── */
-#temoignages { background: var(–cream); }
-.temoignages-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-.temoignage-card {
-background: white; border-radius: 24px; padding: 32px;
-box-shadow: var(–shadow); border: 1px solid rgba(28,28,28,0.04);
-transition: transform 0.25s;
-}
-.temoignage-card:hover { transform: translateY(-3px); }
-.stars { color: #F59E0B; font-size: 14px; margin-bottom: 16px; }
-.temo-text { font-family: ‘Fraunces’, serif; font-size: 17px; font-style: italic; line-height: 1.6; margin-bottom: 24px; color: var(–dark2); font-weight: 300; }
-.temo-author { display: flex; align-items: center; gap: 12px; }
-.temo-av { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 14px; }
-.temo-name { font-size: 14px; font-weight: 600; }
-.temo-role { font-size: 12px; color: var(–gray); margin-top: 2px; }
-
-/* ─── ASSISTANTS ─── */
-#assistants { background: var(–dark); color: white; }
-#assistants .section-title { color: white; }
-#assistants .section-desc { color: rgba(255,255,255,0.5); }
-.assistants-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-.assistant-card {
-background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-border-radius: 20px; padding: 24px; text-align: center;
-transition: all 0.25s;
-}
-.assistant-card:hover { border-color: rgba(242,100,25,0.4); transform: translateY(-3px); }
-.ast-avatar {
-width: 64px; height: 64px; border-radius: 50%;
-margin: 0 auto 16px;
-display: flex; align-items: center; justify-content: center;
-font-weight: 700; font-size: 20px; color: white;
-}
-.ast-name { font-family: ‘Fraunces’, serif; font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-.ast-avail { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.ast-avail .dot { width: 6px; height: 6px; border-radius: 50%; background: var(–green); }
-.ast-rating { font-size: 13px; color: #F59E0B; margin-bottom: 8px; }
-.ast-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-.ast-tag { font-size: 10px; background: rgba(242,100,25,0.1); color: var(–orange); padding: 3px 9px; border-radius: 50px; }
-.ast-distance { font-size: 12px; color: rgba(255,255,255,0.3); margin-top: 12px; }
-
-/* ─── TARIFS ─── */
-#tarifs { background: white; }
-.tarifs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }
-.tarif-card {
-border: 1.5px solid var(–gray-light); border-radius: 28px; padding: 40px;
-text-align: center; transition: all 0.3s; position: relative;
-}
-.tarif-card.featured {
-border-color: var(–orange);
-background: var(–dark); color: white;
-box-shadow: 0 24px 60px rgba(242,100,25,0.2);
-}
-.tarif-badge {
-position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
-background: var(–orange); color: white;
-font-size: 12px; font-weight: 600; padding: 5px 16px; border-radius: 50px;
-white-space: nowrap;
-}
-.tarif-name { font-family: ‘Fraunces’, serif; font-size: 22px; font-weight: 600; margin-bottom: 8px; }
-.tarif-price { font-family: ‘Fraunces’, serif; font-size: 48px; font-weight: 900; color: var(–orange); line-height: 1; }
-.tarif-unit { font-size: 14px; color: var(–gray); margin-bottom: 28px; }
-.featured .tarif-unit { color: rgba(255,255,255,0.5); }
-.tarif-features { list-style: none; text-align: left; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
-.tarif-features li { font-size: 14px; color: var(–gray); display: flex; gap: 8px; align-items: flex-start; }
-.featured .tarif-features li { color: rgba(255,255,255,0.7); }
-.tarif-features li::before { content: “✓”; color: var(–green); font-weight: 700; flex-shrink: 0; }
-
-/* ─── FAQ ─── */
-#faq { background: var(–cream2); }
-.faq-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 0; }
-.faq-item { border-bottom: 1px solid var(–gray-light); }
-.faq-q {
-width: 100%; background: none; border: none;
-padding: 22px 0; display: flex; justify-content: space-between; align-items: center;
-font-family: ‘DM Sans’; font-size: 16px; font-weight: 500; color: var(–dark);
-cursor: pointer; text-align: left; gap: 16px;
-}
-.faq-icon { font-size: 20px; color: var(–orange); flex-shrink: 0; transition: transform 0.3s; }
-.faq-item.open .faq-icon { transform: rotate(45deg); }
-.faq-a { font-size: 15px; color: var(–gray); line-height: 1.7; padding-bottom: 20px; display: none; font-weight: 300; }
-.faq-item.open .faq-a { display: block; }
-
-/* ─── RÉSERVATION FORM ─── */
-#reservation { background: var(–orange); color: white; }
-#reservation .section-tag { background: rgba(255,255,255,0.15); color: white; }
-#reservation .section-title { color: white; }
-#reservation .section-desc { color: rgba(255,255,255,0.8); }
-
-.resa-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-.resa-form {
-background: white; border-radius: 28px; padding: 44px;
-box-shadow: 0 40px 80px rgba(0,0,0,0.15);
-color: var(–dark);
-}
-.form-title { font-family: ‘Fraunces’, serif; font-size: 26px; font-weight: 700; margin-bottom: 28px; }
-
-.form-group { margin-bottom: 20px; }
-.form-label { display: block; font-size: 13px; font-weight: 600; color: var(–dark2); margin-bottom: 7px; letter-spacing: 0.3px; }
-.form-input, .form-select, .form-textarea {
-width: 100%; border: 1.5px solid var(–gray-light);
-border-radius: 12px; padding: 13px 16px;
-font-family: ‘DM Sans’; font-size: 15px; color: var(–dark);
-background: white; outline: none;
-transition: border-color 0.2s;
-}
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(–orange); }
-.form-textarea { resize: vertical; min-height: 100px; }
-
-.service-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-.pill {
-border: 1.5px solid var(–gray-light); border-radius: 50px;
-padding: 8px 16px; font-size: 13px; cursor: pointer;
-transition: all 0.2s; background: white; font-family: ‘DM Sans’;
-}
-.pill.active { background: var(–orange-pale); border-color: var(–orange); color: var(–orange); font-weight: 500; }
-.pill:hover { border-color: var(–orange); }
-
-.form-submit {
-width: 100%; background: var(–orange); color: white;
-border: none; padding: 16px; border-radius: 12px;
-font-family: ‘DM Sans’; font-size: 16px; font-weight: 600;
-cursor: pointer; margin-top: 8px; transition: all 0.2s;
-box-shadow: 0 8px 24px rgba(242,100,25,0.3);
-}
-.form-submit:hover { background: #D9570D; transform: translateY(-1px); }
-
-.resa-info { padding-top: 20px; }
-.resa-info-title { font-family: ‘Fraunces’, serif; font-size: 32px; font-weight: 700; margin-bottom: 16px; }
-.resa-info-desc { font-size: 16px; opacity: 0.85; line-height: 1.7; margin-bottom: 36px; font-weight: 300; }
-.resa-features { display: flex; flex-direction: column; gap: 18px; }
-.resa-feat { display: flex; gap: 14px; align-items: flex-start; }
-.resa-feat-icon { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.resa-feat-title { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-.resa-feat-desc { font-size: 13px; opacity: 0.7; }
-
-/* ─── FOOTER ─── */
-footer {
-background: var(–dark); color: white; padding: 70px 5% 36px;
-}
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 60px; }
-.footer-brand-desc { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7; margin-top: 16px; margin-bottom: 24px; font-weight: 300; }
-.footer-social { display: flex; gap: 10px; }
-.social-btn { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
-.social-btn:hover { background: var(–orange); }
-.footer-col-title { font-family: ‘Fraunces’, serif; font-size: 16px; font-weight: 600; margin-bottom: 20px; }
-.footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-.footer-links a { text-decoration: none; color: rgba(255,255,255,0.4); font-size: 14px; transition: color 0.2s; }
-.footer-links a:hover { color: var(–orange); }
-.footer-bottom { padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; }
-.footer-copy { font-size: 13px; color: rgba(255,255,255,0.3); }
-.footer-legal { display: flex; gap: 24px; }
-.footer-legal a { font-size: 13px; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
-.footer-legal a:hover { color: white; }
-
-/* ─── SUCCESS MODAL ─── */
-.modal-overlay {
-position: fixed; inset: 0; z-index: 9999;
-background: rgba(0,0,0,0.5); backdrop-filter: blur(8px);
-display: flex; align-items: center; justify-content: center;
-opacity: 0; pointer-events: none; transition: opacity 0.3s;
-}
-.modal-overlay.show { opacity: 1; pointer-events: all; }
-.modal {
-background: white; border-radius: 28px; padding: 48px;
-max-width: 440px; width: 90%; text-align: center;
-transform: scale(0.9); transition: transform 0.3s;
-box-shadow: 0 40px 80px rgba(0,0,0,0.2);
-}
-.modal-overlay.show .modal { transform: scale(1); }
-.modal-icon { font-size: 56px; margin-bottom: 20px; }
-.modal-title { font-family: ‘Fraunces’, serif; font-size: 28px; font-weight: 700; margin-bottom: 12px; }
-.modal-desc { font-size: 15px; color: var(–gray); line-height: 1.65; margin-bottom: 28px; }
-.modal-close { background: var(–orange); color: white; border: none; padding: 14px 36px; border-radius: 50px; font-family: ‘DM Sans’; font-size: 15px; font-weight: 600; cursor: pointer; }
-
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp {
-from { opacity: 0; transform: translateY(28px); }
-to { opacity: 1; transform: translateY(0); }
-}
-@keyframes float {
-0%, 100% { transform: translateY(0px); }
-50% { transform: translateY(-10px); }
-}
-@keyframes pulse {
-0%, 100% { transform: scale(1); opacity: 1; }
-50% { transform: scale(1.3); opacity: 0.6; }
-}
-
-.reveal {
-opacity: 0; transform: translateY(32px);
-transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 768px) {
-.hero { grid-template-columns: 1fr; gap: 40px; padding: 100px 5% 60px; }
-.hero-visual { display: none; }
-.steps-layout { grid-template-columns: 1fr; }
-.steps-visual { display: none; }
-.resa-layout { grid-template-columns: 1fr; }
-.resa-info { display: none; }
-.footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-.nav-links { display: none; }
-.burger { display: flex; }
-.footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
-}
-@media (max-width: 480px) {
-.footer-grid { grid-template-columns: 1fr; }
-.hero-stats { gap: 20px; }
-}
-
-/* ─── CHAT EN DIRECT ─── */
-.chat-bubble {
-position: fixed; bottom: 28px; right: 28px; z-index: 2000;
-width: 58px; height: 58px; border-radius: 50%;
-background: linear-gradient(135deg, var(–orange), #FF8C4B);
-box-shadow: 0 8px 28px rgba(242,100,25,0.4);
-display: flex; align-items: center; justify-content: center;
-cursor: pointer; font-size: 24px;
-transition: transform 0.2s, box-shadow 0.2s;
-border: none;
-}
-.chat-bubble:hover { transform: scale(1.08); box-shadow: 0 12px 36px rgba(242,100,25,0.5); }
-.chat-badge {
-position: absolute; top: -4px; right: -4px;
-width: 18px; height: 18px; border-radius: 50%;
-background: #EF4444; border: 2px solid white;
-display: flex; align-items: center; justify-content: center;
-font-size: 10px; color: white; font-weight: 700;
-}
-.chat-window {
-position: fixed; bottom: 100px; right: 28px; z-index: 1999;
-width: 360px; max-height: 540px;
-background: white; border-radius: 24px;
-box-shadow: 0 24px 80px rgba(0,0,0,0.18);
-display: flex; flex-direction: column;
-transform: scale(0.85) translateY(20px);
-opacity: 0; pointer-events: none;
-transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-overflow: hidden;
-}
-.chat-window.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
-.chat-header {
-background: var(–dark); padding: 18px 20px;
-display: flex; align-items: center; gap: 12px;
-}
-.chat-header-av {
-width: 40px; height: 40px; border-radius: 50%;
-background: linear-gradient(135deg, var(–orange), #FFAD70);
-display: flex; align-items: center; justify-content: center;
-font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
-}
-.chat-header-name { font-size: 15px; font-weight: 600; color: white; }
-.chat-header-status { font-size: 12px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 5px; }
-.chat-header-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(–green); animation: pulse 2s infinite; }
-.chat-close { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 20px; cursor: pointer; margin-left: auto; transition: color 0.2s; }
-.chat-close:hover { color: white; }
-.chat-messages {
-flex: 1; overflow-y: auto; padding: 20px;
-display: flex; flex-direction: column; gap: 14px; max-height: 280px;
-}
-.chat-messages::-webkit-scrollbar { width: 3px; }
-.chat-messages::-webkit-scrollbar-thumb { background: var(–gray-light); border-radius: 2px; }
-.msg { display: flex; gap: 8px; align-items: flex-end; }
-.msg.user { flex-direction: row-reverse; }
-.msg-av { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(–orange), #FFAD70); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; flex-shrink: 0; }
-.msg-bubble { max-width: 78%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.5; }
-.msg.agent .msg-bubble { background: var(–cream2); color: var(–dark); border-bottom-left-radius: 4px; }
-.msg.user .msg-bubble { background: var(–orange); color: white; border-bottom-right-radius: 4px; }
-.chat-typing { display: flex; gap: 5px; align-items: center; }
-.chat-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(–gray); animation: typing 1.2s infinite; }
-.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
-.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typing { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-6px);opacity:1} }
-.chat-quick { padding: 0 16px 12px; display: flex; gap: 6px; flex-wrap: wrap; }
-.chat-quick-btn {
-background: var(–orange-pale); border: 1px solid rgba(242,100,25,0.2);
-color: var(–orange); border-radius: 50px; padding: 6px 12px;
-font-size: 12px; cursor: pointer; font-family: ‘DM Sans’; transition: all 0.2s;
-}
-.chat-quick-btn:hover { background: var(–orange); color: white; }
-.chat-input-area { padding: 14px 16px; border-top: 1px solid var(–gray-light); display: flex; gap: 8px; }
-.chat-input {
-flex: 1; border: 1.5px solid var(–gray-light); border-radius: 50px;
-padding: 10px 16px; font-family: ‘DM Sans’; font-size: 14px; outline: none;
-transition: border-color 0.2s;
-}
-.chat-input:focus { border-color: var(–orange); }
-.chat-send {
-width: 40px; height: 40px; border-radius: 50%;
-background: var(–orange); border: none; cursor: pointer;
-display: flex; align-items: center; justify-content: center;
-font-size: 16px; transition: all 0.2s; flex-shrink: 0;
-}
-.chat-send:hover { background: #D9570D; }
-
-/* ─── PAGE ASSISTANT ─── */
-.page-overlay {
-position: fixed; inset: 0; z-index: 3000;
-background: #FAFAF7; overflow-y: auto;
-transform: translateX(100%);
-transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
-}
-.page-overlay.open { transform: translateX(0); }
-.page-nav {
-position: sticky; top: 0; z-index: 10;
-background: rgba(250,250,247,0.96); backdrop-filter: blur(16px);
-padding: 16px 5%; border-bottom: 1px solid var(–gray-light);
-display: flex; align-items: center; gap: 16px;
-}
-.page-back {
-background: none; border: 1.5px solid var(–gray-light); border-radius: 50px;
-padding: 8px 18px; font-family: ‘DM Sans’; font-size: 14px;
-cursor: pointer; color: var(–dark); transition: all 0.2s;
-}
-.page-back:hover { border-color: var(–orange); color: var(–orange); }
-.page-content { max-width: 1100px; margin: 0 auto; padding: 60px 5% 100px; }
-.ast-hero { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 70px; }
-@media(max-width:768px){ .ast-hero{grid-template-columns:1fr;} }
-.ast-perks { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; margin-bottom: 60px; }
-.ast-perk {
-background: white; border: 1px solid var(–gray-light);
-border-radius: 20px; padding: 28px; text-align: center; transition: all 0.25s;
-}
-.ast-perk:hover { border-color: var(–orange); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(242,100,25,0.08); }
-.ast-perk-icon { font-size: 34px; margin-bottom: 12px; }
-.ast-perk-val { font-family: ‘Fraunces’, serif; font-size: 26px; font-weight: 700; color: var(–orange); margin-bottom: 4px; }
-.ast-perk-label { font-size: 13px; color: var(–gray); }
-.ast-form-card { background: white; border-radius: 28px; padding: 44px; box-shadow: var(–shadow-lg); max-width: 700px; margin: 0 auto; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media(max-width:600px){ .form-row{grid-template-columns:1fr;} }
-.checkbox-group { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
-.checkbox-item { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.checkbox-item input { width: 18px; height: 18px; accent-color: var(–orange); cursor: pointer; }
-.checkbox-item span { font-size: 14px; color: var(–dark2); }
-
-/* ─── MOBILE MENU ─── */
-.mobile-menu {
-position: fixed; top: 72px; left: 0; right: 0; z-index: 999;
-background: white; padding: 20px 5%;
-border-bottom: 1px solid var(–gray-light);
-box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-display: none; flex-direction: column; gap: 4px;
-}
-.mobile-menu.open { display: flex; }
-.mobile-menu a { text-decoration: none; color: var(–dark); font-size: 16px; padding: 12px 0; border-bottom: 1px solid var(–cream2); }
-.mobile-menu a:last-child { border-bottom: none; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,serif;background:#FAFAF7;color:#1C1C1C;overflow-x:hidden}
+:root{--or:#F26419;--dk:#1C1C1C;--gy:#6B7280;--cr:#F4F2EC;--gr:#059669}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 5%;display:flex;align-items:center;justify-content:space-between;background:rgba(250,250,247,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 20px rgba(0,0,0,0.05)}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#F26419,#FFAD70);display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-txt{font-size:20px;font-weight:700;color:#1C1C1C;letter-spacing:-0.5px}
+.btn-or{background:#F26419;color:#fff;border:none;padding:10px 22px;border-radius:50px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.2s}
+.btn-or:hover{background:#D9570D;transform:translateY(-1px)}
+.btn-out{background:transparent;color:#1C1C1C;border:1.5px solid rgba(0,0,0,0.15);padding:9px 20px;border-radius:50px;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block;transition:all 0.2s}
+.btn-out:hover{border-color:#F26419;color:#F26419}
+section{padding:80px 5%}
+.tag{display:inline-block;background:#FFF1E8;color:#F26419;font-size:12px;font-weight:600;padding:5px 14px;border-radius:50px;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:16px}
+h1{font-size:clamp(36px,6vw,64px);font-weight:900;line-height:1.1;letter-spacing:-2px;margin-bottom:20px}
+h2{font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.1;letter-spacing:-1.5px;margin-bottom:14px}
+.accent{color:#F26419;font-style:italic}
+p.lead{font-size:17px;color:#6B7280;line-height:1.75;font-weight:300;max-width:520px;margin-bottom:32px}
+.hero{min-height:100vh;display:flex;align-items:center;padding:100px 5% 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 20%,rgba(242,100,25,0.08),transparent 60%);pointer-events:none}
+.dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(0,0,0,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.badge{display:inline-flex;align-items:center;gap:8px;background:#FFF1E8;border:1px solid rgba(242,100,25,0.2);border-radius:50px;padding:6px 16px;margin-bottom:24px}
+.dot-green{width:7px;height:7px;border-radius:50%;background:#059669;animation:pulse 2s infinite}
+.badge span{font-size:13px;color:#F26419;font-weight:500}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.stats{display:flex;gap:32px;padding-top:32px;border-top:1px solid #E5E3DC}
+.stat-v{font-size:28px;font-weight:800;color:#F26419;font-style:italic}
+.stat-l{font-size:11px;color:#6B7280;margin-top:2px;letter-spacing:0.5px}
+/* SERVICES */
+#services{background:#1C1C1C;color:#fff}
+#services .tag{background:rgba(242,100,25,0.15)}
+#services h2{color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:48px}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:28px;transition:all 0.3s;cursor:pointer}
+.card:hover{border-color:rgba(242,100,25,0.4);transform:translateY(-4px)}
+.card-icon{width:52px;height:52px;border-radius:14px;background:rgba(242,100,25,0.12);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px}
+.card h3{font-size:20px;font-weight:700;margin-bottom:4px}
+.card .sub{font-size:13px;color:#F26419;margin-bottom:12px}
+.card p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.65;font-weight:300}
+.card-ft{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px}
+.card-ft span:first-child{color:rgba(255,255,255,0.3)}
+.card-ft span:last-child{color:#F26419;font-weight:600;font-size:14px}
+/* HOW */
+#how{background:#F4F2EC}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+@media(max-width:768px){.how-grid{grid-template-columns:1fr}}
+.steps{display:flex;flex-direction:column}
+.step{display:flex;gap:16px;padding:24px 0;border-bottom:1px solid #E5E3DC;transition:all 0.2s;cursor:pointer}
+.step:last-child{border-bottom:none}
+.step:hover .snum{background:#F26419;color:#fff}
+.snum{width:42px;height:42px;border-radius:12px;background:#FFF1E8;color:#F26419;font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;font-style:italic}
+.step h4{font-size:18px;font-weight:700;margin-bottom:6px}
+.step p{font-size:13px;color:#6B7280;line-height:1.6;font-weight:300}
+.vis-card{background:#fff;border-radius:24px;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.1)}
+.tl-item{display:flex;gap:14px;align-items:flex-start;padding:14px 0;position:relative}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:13px;top:42px;width:2px;height:100%;background:linear-gradient(to bottom,#F26419,transparent)}
+.tl-dot{width:28px;height:28px;border-radius:50%;background:#FFF1E8;border:2px solid #F26419;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;z-index:1}
+.tl-t{font-size:13px;font-weight:600}
+.tl-s{font-size:11px;color:#6B7280;margin-top:2px}
+.tl-time{margin-left:auto;color:#F26419;font-weight:700;font-size:13px;white-space:nowrap;padding-top:4px;font-style:italic}
+/* POUR QUI */
+#pourqui{background:#fff}
+.aud-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:48px}
+.aud-card{border:1.5px solid #E5E3DC;border-radius:24px;padding:32px;transition:all 0.3s}
+.aud-card:hover{border-color:#F26419;transform:translateY(-3px);box-shadow:0 20px 50px rgba(242,100,25,0.08)}
+.aud-em{font-size:40px;margin-bottom:16px}
+.aud-card h3{font-size:22px;font-weight:700;margin-bottom:10px}
+.aud-card p{font-size:13px;color:#6B7280;line-height:1.7;font-weight:300;margin-bottom:16px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.t{background:#FFF1E8;color:#F26419;font-size:11px;padding:4px 12px;border-radius:50px;font-weight:500}
+/* TEMOIGNAGES */
+#temo{background:#FAFAF7}
+.temo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:48px}
+.temo-card{background:#fff;border-radius:20px;padding:28px;box-shadow:0 8px 40px rgba(0,0,0,0.07);transition:transform 0.25s}
+.temo-card:hover{transform:translateY(-3px)}
+.stars{color:#F59E0B;font-size:14px;margin-bottom:14px}
+.temo-txt{font-size:16px;font-style:italic;line-height:1.65;margin-bottom:20px;color:#2D2D2D;font-weight:300}
+.temo-au{display:flex;align-items:center;gap:10px}
+.temo-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px}
+.temo-n{font-size:14px;font-weight:600}
+.temo-r{font-size:11px;color:#6B7280;margin-top:2px}
+/* TARIFS */
+#tarifs{background:#fff}
+.tar-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:860px;margin:48px auto 0}
+.tar-card{border:1.5px solid #E5E3DC;border-radius:24px;padding:36px;text-align:center;position:relative;transition:all 0.3s}
+.tar-card.feat{border-color:#F26419;background:#1C1C1C;color:#fff;box-shadow:0 24px 60px rgba(242,100,25,0.2)}
+.tar-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#F26419;color:#fff;font-size:11px;font-weight:700;padding:4px 16px;border-radius:50px;white-space:nowrap}
+.tar-name{font-size:20px;font-weight:700;margin-bottom:8px}
+.tar-price{font-size:44px;font-weight:900;color:#F26419;line-height:1;font-style:italic}
+.tar-unit{font-size:13px;color:#6B7280;margin-bottom:24px}
+.feat .tar-unit{color:rgba(255,255,255,0.5)}
+.tar-list{list-style:none;text-align:left;margin-bottom:28px;display:flex;flex-direction:column;gap:10px}
+.tar-list li{font-size:13px;color:#6B7280;display:flex;gap:8px}
+.feat .tar-list li{color:rgba(255,255,255,0.7)}
+.tar-list li::before{content:"✓";color:#059669;font-weight:700;flex-shrink:0}
+/* FAQ */
+#faq{background:#F4F2EC}
+.faq-list{max-width:700px;margin:48px auto 0}
+.faq-item{border-bottom:1px solid #E5E3DC}
+.faq-q{width:100%;background:none;border:none;padding:20px 0;display:flex;justify-content:space-between;align-items:center;font-family:Georgia,serif;font-size:16px;font-weight:600;color:#1C1C1C;cursor:pointer;text-align:left;gap:14px}
+.faq-ic{font-size:20px;color:#F26419;flex-shrink:0;transition:transform 0.3s}
+.faq-item.open .faq-ic{transform:rotate(45deg)}
+.faq-a{font-size:14px;color:#6B7280;line-height:1.7;padding-bottom:18px;display:none;font-weight:300}
+.faq-item.open .faq-a{display:block}
+/* RESA */
+#resa{background:#F26419;color:#fff}
+#resa .tag{background:rgba(255,255,255,0.15);color:#fff}
+.resa-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+@media(max-width:768px){.resa-grid{grid-template-columns:1fr}}
+.form-card{background:#fff;border-radius:24px;padding:36px;box-shadow:0 40px 80px rgba(0,0,0,0.15);color:#1C1C1C}
+.form-card h3{font-size:24px;font-weight:700;margin-bottom:24px}
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:12px;font-weight:700;color:#2D2D2D;margin-bottom:6px;letter-spacing:0.3px}
+.fi,.fs,.ft{width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:12px 14px;font-family:Georgia,serif;font-size:14px;color:#1C1C1C;background:#fff;outline:none;transition:border-color 0.2s}
+.fi:focus,.fs:focus,.ft:focus{border-color:#F26419}
+.ft{resize:vertical;min-height:90px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.pill{border:1.5px solid #E5E3DC;border-radius:50px;padding:7px 14px;font-size:12px;cursor:pointer;transition:all 0.2s;background:#fff;font-family:Georgia,serif}
+.pill.active{background:#FFF1E8;border-color:#F26419;color:#F26419;font-weight:600}
+.fsub{width:100%;background:#F26419;color:#fff;border:none;padding:14px;border-radius:10px;font-family:Georgia,serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px;transition:all 0.2s}
+.fsub:hover{background:#D9570D}
+.resa-info{padding-top:10px}
+.resa-info h3{font-size:28px;font-weight:800;margin-bottom:14px;letter-spacing:-1px}
+.resa-info p{font-size:15px;opacity:0.85;line-height:1.7;margin-bottom:28px;font-weight:300}
+.feat-list{display:flex;flex-direction:column;gap:16px}
+.feat-item{display:flex;gap:12px;align-items:flex-start}
+.feat-ic{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.feat-item h4{font-size:14px;font-weight:700;margin-bottom:2px}
+.feat-item p{font-size:12px;opacity:0.7}
+/* FOOTER */
+footer{background:#1C1C1C;color:#fff;padding:60px 5% 30px}
+.ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+@media(max-width:768px){.ft-grid{grid-template-columns:1fr 1fr;gap:28px}}
+@media(max-width:480px){.ft-grid{grid-template-columns:1fr}}
+.ft-desc{font-size:13px;color:rgba(255,255,255,0.4);line-height:1.7;margin:12px 0 20px;font-weight:300}
+.ft-soc{display:flex;gap:8px}
+.ft-sb{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:background 0.2s;text-decoration:none;color:#fff}
+.ft-sb:hover{background:#F26419}
+.ft-col h4{font-size:15px;font-weight:700;margin-bottom:16px;font-style:italic}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ft-links a{text-decoration:none;color:rgba(255,255,255,0.4);font-size:13px;transition:color 0.2s}
+.ft-links a:hover{color:#F26419}
+.ft-bot{padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.ft-copy{font-size:12px;color:rgba(255,255,255,0.3)}
+.ft-leg{display:flex;gap:20px}
+.ft-leg a{font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none}
+.ft-leg a:hover{color:#fff}
+/* CHAT */
+.chat-btn{position:fixed;bottom:24px;right:24px;z-index:2000;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#F26419,#FFAD70);border:none;cursor:pointer;font-size:22px;box-shadow:0 8px 28px rgba(242,100,25,0.4);transition:transform 0.2s}
+.chat-btn:hover{transform:scale(1.08)}
+.chat-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#EF4444;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700}
+.chat-win{position:fixed;bottom:96px;right:24px;z-index:1999;width:320px;background:#fff;border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,0.18);display:flex;flex-direction:column;transform:scale(0.85) translateY(20px);opacity:0;pointer-events:none;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);overflow:hidden}
+.chat-win.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
+.chat-hd{background:#1C1C1C;padding:16px;display:flex;align-items:center;gap:10px}
+.chat-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#F26419,#FFAD70);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.chat-nm{font-size:14px;font-weight:600;color:#fff}
+.chat-st{font-size:11px;color:rgba(255,255,255,0.5);display:flex;align-items:center;gap:4px}
+.chat-st .dg{width:5px;height:5px;border-radius:50%;background:#059669;animation:pulse 2s infinite}
+.chat-cl{background:none;border:none;color:rgba(255,255,255,0.4);font-size:18px;cursor:pointer;margin-left:auto}
+.chat-msgs{max-height:240px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{display:flex;gap:7px;align-items:flex-end}
+.msg.u{flex-direction:row-reverse}
+.msg-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#F26419,#FFAD70);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+.msg-b{max-width:78%;padding:9px 12px;border-radius:16px;font-size:13px;line-height:1.5}
+.msg.ag .msg-b{background:#F4F2EC;color:#1C1C1C;border-bottom-left-radius:4px}
+.msg.u .msg-b{background:#F26419;color:#fff;border-bottom-right-radius:4px}
+.chat-qs{padding:0 12px 10px;display:flex;gap:6px;flex-wrap:wrap}
+.cq{background:#FFF1E8;border:1px solid rgba(242,100,25,0.2);color:#F26419;border-radius:50px;padding:5px 10px;font-size:11px;cursor:pointer;transition:all 0.2s}
+.cq:hover{background:#F26419;color:#fff}
+.chat-inp{padding:10px 12px;border-top:1px solid #E5E3DC;display:flex;gap:6px}
+.cin{flex:1;border:1.5px solid #E5E3DC;border-radius:50px;padding:8px 14px;font-family:Georgia,serif;font-size:13px;outline:none}
+.cin:focus{border-color:#F26419}
+.csd{width:36px;height:36px;border-radius:50%;background:#F26419;border:none;cursor:pointer;font-size:14px;flex-shrink:0;transition:all 0.2s}
+.csd:hover{background:#D9570D}
+/* MODAL */
+.modal-ov{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.modal-ov.show{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:24px;padding:40px;max-width:400px;width:90%;text-align:center;transform:scale(0.9);transition:transform 0.3s;box-shadow:0 40px 80px rgba(0,0,0,0.2)}
+.modal-ov.show .modal{transform:scale(1)}
+.modal h3{font-size:24px;font-weight:700;margin:14px 0 10px}
+.modal p{font-size:14px;color:#6B7280;line-height:1.65;margin-bottom:24px}
+.modal button{background:#F26419;color:#fff;border:none;padding:12px 32px;border-radius:50px;font-family:Georgia,serif;font-size:14px;font-weight:700;cursor:pointer}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0.6}}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:768px){.resa-info{display:none}}
 </style>
-
 </head>
 <body>
 
-<!-- ─── NAV ─── -->
-
-<nav id="navbar">
-  <a href="#" class="nav-logo">
+<nav>
+  <a href="#" class="logo">
     <div class="logo-icon">⚡</div>
-    <span class="logo-text">QuickMi</span>
+    <span class="logo-txt">QuickMi</span>
   </a>
-
-  <ul class="nav-links">
-    <li><a href="#services">Services</a></li>
-    <li><a href="#how">Comment ça marche</a></li>
-    <li><a href="#pourqui">Pour qui</a></li>
-    <li><a href="#tarifs">Tarifs</a></li>
-    <li><a href="#faq">FAQ</a></li>
-  </ul>
-
-  <div class="nav-cta">
-    <a href="#assistants" onclick="openPage('assistantPage');return false;" class="btn-outline" style="padding:10px 20px;font-size:14px;">Devenir assistant(e)</a>
-    <a href="#reservation" class="btn-nav">Réserver maintenant</a>
-  </div>
-
-  <div class="burger" id="burger" onclick="toggleMenu()">
-    <span></span><span></span><span></span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <a href="#resa" class="btn-out" style="display:none" id="nav-ast" onclick="openAst()">Devenir assistant(e)</a>
+    <a href="#resa" class="btn-or">Réserver</a>
   </div>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#services" onclick="toggleMenu()">Services</a>
-  <a href="#how" onclick="toggleMenu()">Comment ça marche</a>
-  <a href="#pourqui" onclick="toggleMenu()">Pour qui</a>
-  <a href="#tarifs" onclick="toggleMenu()">Tarifs</a>
-  <a href="#reservation" onclick="toggleMenu()">Réserver →</a>
-</div>
-
-<!-- ─── HERO ─── -->
+<!-- HERO -->
 
 <section class="hero" id="home">
   <div class="hero-bg"></div>
-  <div class="hero-bg-dot"></div>
-
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      <span>Assistants disponibles près de vous</span>
-    </div>
-
-```
-<h1 class="hero-title">
-  L'aide à la personne,
-  <em>à la demande.</em>
-</h1>
-
-<p class="hero-desc">
-  Courses, rendez-vous, trajets — des assistant(e)s vérifié(e)s et bienveillant(e)s vous accompagnent partout, en moins de 10 minutes.
-</p>
-
-<div class="hero-actions">
-  <a href="#reservation" class="btn-primary">Réserver maintenant ↓</a>
-  <a href="#how" class="btn-outline">Voir comment ça marche</a>
-</div>
-
-<div class="hero-stats">
+  <div class="dots"></div>
   <div>
-    <div class="stat-val">< 10min</div>
-    <div class="stat-label">MISE EN RELATION</div>
-  </div>
-  <div>
-    <div class="stat-val">4.9★</div>
-    <div class="stat-label">NOTE MOYENNE</div>
-  </div>
-  <div>
-    <div class="stat-val">100%</div>
-    <div class="stat-label">VÉRIFIÉS & ASSURÉS</div>
-  </div>
-</div>
-```
-
-  </div>
-
-  <div class="hero-visual">
-    <div style="position:relative; display:flex; justify-content:center; padding: 40px 80px;">
-
-```
-  <!-- Floating cards -->
-  <div class="float-card float-1">
-    <span class="fc-icon">⚡</span>
-    <div class="fc-text">
-      <div class="fc-val">En route !</div>
-      <div class="fc-sub">Marie arrive dans 8 min</div>
+    <div class="badge"><span class="dot-green"></span><span>Assistants disponibles près de vous</span></div>
+    <h1>L'aide à la personne,<br><span class="accent">à la demande.</span></h1>
+    <p class="lead">Courses, rendez-vous, trajets — des assistant(e)s vérifié(e)s vous accompagnent partout, en moins de 10 minutes.</p>
+    <div class="actions">
+      <a href="#resa" class="btn-or" style="font-size:16px;padding:16px 36px">Réserver maintenant ↓</a>
+      <a href="#how" class="btn-out" style="font-size:15px;padding:15px 28px">Comment ça marche ?</a>
     </div>
-  </div>
-  <div class="float-card float-2 float-card-2">
-    <span class="fc-icon">⭐</span>
-    <div class="fc-text">
-      <div class="fc-val">Nouveau avis</div>
-      <div class="fc-sub">"Parfaite, je recommande !"</div>
+    <div class="stats">
+      <div><div class="stat-v">&lt; 10min</div><div class="stat-l">MISE EN RELATION</div></div>
+      <div><div class="stat-v">4.9★</div><div class="stat-l">NOTE MOYENNE</div></div>
+      <div><div class="stat-v">100%</div><div class="stat-l">VÉRIFIÉS & ASSURÉS</div></div>
     </div>
-  </div>
-  <div class="float-card float-3">
-    <span class="fc-icon">✅</span>
-    <div class="fc-text">
-      <div class="fc-val">Mission terminée</div>
-      <div class="fc-sub">Courses — 1h30</div>
-    </div>
-  </div>
-
-  <!-- Phone -->
-  <div class="phone-mockup">
-    <div class="phone-notch"></div>
-    <div class="phone-screen">
-      <div class="phone-header">
-        <span class="phone-logo">⚡ QuickMi</span>
-        <div class="phone-avatar">MJ</div>
-      </div>
-
-      <div class="phone-card">
-        <div class="phone-card-title">BONJOUR MARIE-JEANNE 👋</div>
-        <div class="phone-card-val">De quoi avez-vous besoin ?</div>
-        <div class="phone-card-sub">3 assistant(e)s disponibles près de vous</div>
-      </div>
-
-      <div class="phone-services">
-        <div class="phone-svc">
-          <div class="phone-svc-icon">🛒</div>
-          <div class="phone-svc-name">Courses</div>
-        </div>
-        <div class="phone-svc">
-          <div class="phone-svc-icon">🏥</div>
-          <div class="phone-svc-name">Rendez-vous</div>
-        </div>
-        <div class="phone-svc">
-          <div class="phone-svc-icon">🚗</div>
-          <div class="phone-svc-name">Trajet</div>
-        </div>
-        <div class="phone-svc">
-          <div class="phone-svc-icon">🏠</div>
-          <div class="phone-svc-name">Domicile</div>
-        </div>
-      </div>
-
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.5px;">DISPONIBLE MAINTENANT</div>
-
-      <div class="phone-helper">
-        <div class="helper-av">SL</div>
-        <div>
-          <div class="helper-name">Sophie L. <span class="helper-dot"></span></div>
-          <div class="helper-info">★ 4.9 · 0.8 km · Courses & RDV</div>
-        </div>
-      </div>
-
-      <div class="phone-btn">Réserver Sophie →</div>
-    </div>
-  </div>
-</div>
-```
-
   </div>
 </section>
 
-<!-- ─── SERVICES ─── -->
+<!-- SERVICES -->
 
 <section id="services">
-  <div class="section-header reveal">
-    <span class="section-tag">Nos services</span>
-    <h2 class="section-title">Tout ce dont vous avez besoin,<br>en un seul endroit.</h2>
-    <p class="section-desc">Conçus spécialement pour les personnes âgées, en situation de handicap, ou ayant besoin d'un soutien ponctuel.</p>
-  </div>
-
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <div class="svc-icon">🛒</div>
-      <div class="svc-title">Courses</div>
-      <div class="svc-subtitle">Accompagnement shopping</div>
-      <div class="svc-desc">Votre assistant(e) vous accompagne au supermarché ou au marché, vous aide à choisir les produits et porte vos sacs jusqu'à chez vous.</div>
-      <div class="svc-footer">
-        <span class="svc-duration">1h – 3h</span>
-        <span class="svc-price">Dès 24€</span>
-      </div>
-    </div>
-
-```
-<div class="service-card reveal" style="transition-delay:0.1s">
-  <div class="svc-icon">🏥</div>
-  <div class="svc-title">Rendez-vous</div>
-  <div class="svc-subtitle">Médecin, banque, mairie…</div>
-  <div class="svc-desc">Accompagnement bienveillant pour tous vos rendez-vous : médecin, spécialiste, banque, préfecture, pharmacie, notaire ou kiné.</div>
-  <div class="svc-footer">
-    <span class="svc-duration">30min – 2h</span>
-    <span class="svc-price">Dès 18€</span>
-  </div>
-</div>
-
-<div class="service-card reveal" style="transition-delay:0.2s">
-  <div class="svc-icon">🚗</div>
-  <div class="svc-title">Trajets</div>
-  <div class="svc-subtitle">Déplacements quotidiens</div>
-  <div class="svc-desc">Transport et accompagnement pour vos sorties, promenades, activités culturelles, visites à la famille ou simples déplacements.</div>
-  <div class="svc-footer">
-    <span class="svc-duration">Sur mesure</span>
-    <span class="svc-price">Dès 16€</span>
-  </div>
-</div>
-
-<div class="service-card reveal" style="transition-delay:0.3s">
-  <div class="svc-icon">🏠</div>
-  <div class="svc-title">À domicile</div>
-  <div class="svc-subtitle">Présence & compagnie</div>
-  <div class="svc-desc">Présence rassurante, aide légère à domicile, lecture, conversation, jeux de société. Contre l'isolement, pour le bien-être.</div>
-  <div class="svc-footer">
-    <span class="svc-duration">1h – 4h</span>
-    <span class="svc-price">Dès 16€</span>
-  </div>
-</div>
-```
-
+  <div class="reveal"><span class="tag">Nos services</span>
+  <h2>Tout ce dont vous avez besoin.</h2>
+  <p style="color:rgba(255,255,255,0.5);font-size:16px;font-weight:300;max-width:500px">Conçus pour les personnes âgées et toute personne ayant besoin d'un soutien ponctuel.</p></div>
+  <div class="grid">
+    <div class="card reveal"><div class="card-icon">🛒</div><h3>Courses</h3><div class="sub">Accompagnement shopping</div><p>Votre assistant(e) vous accompagne au supermarché, vous aide à choisir et porte vos sacs jusqu'à chez vous.</p><div class="card-ft"><span>1h – 3h</span><span>Dès 24€</span></div></div>
+    <div class="card reveal" style="transition-delay:0.1s"><div class="card-icon">🏥</div><h3>Rendez-vous</h3><div class="sub">Médecin, banque, mairie…</div><p>Accompagnement pour tous vos rendez-vous médicaux, administratifs ou personnels.</p><div class="card-ft"><span>30min – 2h</span><span>Dès 18€</span></div></div>
+    <div class="card reveal" style="transition-delay:0.2s"><div class="card-icon">🚗</div><h3>Trajets</h3><div class="sub">Déplacements quotidiens</div><p>Transport et accompagnement pour vos sorties, promenades, activités ou visites à la famille.</p><div class="card-ft"><span>Sur mesure</span><span>Dès 16€</span></div></div>
+    <div class="card reveal" style="transition-delay:0.3s"><div class="card-icon">🏠</div><h3>À domicile</h3><div class="sub">Présence & compagnie</div><p>Présence bienveillante, aide légère, lecture, conversation. Contre l'isolement, pour le bien-être.</p><div class="card-ft"><span>1h – 4h</span><span>Dès 16€</span></div></div>
   </div>
 </section>
 
-<!-- ─── HOW IT WORKS ─── -->
+<!-- HOW -->
 
 <section id="how">
-  <div class="steps-layout">
+  <div class="how-grid">
     <div>
-      <div class="section-header reveal">
-        <span class="section-tag">Simple & rapide</span>
-        <h2 class="section-title">Comment ça marche ?</h2>
-        <p class="section-desc">Réservez votre assistant(e) en moins de 5 minutes, par téléphone ou en ligne.</p>
+      <div class="reveal"><span class="tag">Simple & rapide</span><h2>Comment ça marche ?</h2><p class="lead" style="margin-bottom:32px">Réservez votre assistant(e) en moins de 5 minutes, par téléphone ou en ligne.</p></div>
+      <div class="steps">
+        <div class="step reveal"><div class="snum">1</div><div><h4>Choisissez votre service</h4><p>Courses, rendez-vous, trajet ou aide à domicile. Immédiatement ou planifiez.</p></div></div>
+        <div class="step reveal"><div class="snum">2</div><div><h4>Sélectionnez votre assistant(e)</h4><p>Profils vérifiés, notés et disponibles près de chez vous.</p></div></div>
+        <div class="step reveal"><div class="snum">3</div><div><h4>Confirmez & payez</h4><p>Paiement sécurisé. Confirmation immédiate par SMS.</p></div></div>
+        <div class="step reveal"><div class="snum">4</div><div><h4>Suivez en temps réel</h4><p>Géolocalisation live et communication directe.</p></div></div>
       </div>
-
-```
-  <div class="steps-list">
-    <div class="step-item reveal">
-      <div class="step-num">1</div>
+    </div>
+    <div class="vis-card reveal">
+      <div style="font-size:12px;font-weight:700;color:#6B7280;letter-spacing:0.5px;margin-bottom:18px">SUIVI EN DIRECT</div>
       <div>
-        <div class="step-title">Choisissez votre service</div>
-        <div class="step-desc">Courses, rendez-vous, trajet ou aide à domicile. Indiquez la date et l'heure souhaitées — immédiatement ou à planifier.</div>
+        <div class="tl-item"><div class="tl-dot">✓</div><div><div class="tl-t">Réservation confirmée</div><div class="tl-s">Sophie L. a accepté</div></div><div class="tl-time">9:02</div></div>
+        <div class="tl-item"><div class="tl-dot">🚶</div><div><div class="tl-t">En route vers vous</div><div class="tl-s">Distance : 0.8 km</div></div><div class="tl-time">9:05</div></div>
+        <div class="tl-item"><div class="tl-dot">👋</div><div><div class="tl-t">Arrivée chez vous</div><div class="tl-s">Mission démarrée</div></div><div class="tl-time">9:11</div></div>
+        <div class="tl-item"><div class="tl-dot">🛒</div><div><div class="tl-t">Courses en cours</div><div class="tl-s">Monoprix — Rue de la Paix</div></div><div class="tl-time">9:25</div></div>
+        <div class="tl-item" style="border:none"><div class="tl-dot" style="background:#FFF1E8;border-color:#F26419;animation:pulse 1.5s infinite">⏳</div><div><div class="tl-t" style="color:#F26419">Retour prévu</div><div class="tl-s">Dans ~25 minutes</div></div><div class="tl-time">~10:30</div></div>
+      </div>
+      <div style="margin-top:20px;background:#FFF1E8;border-radius:12px;padding:14px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:20px">📞</span>
+        <div><div style="font-size:13px;font-weight:700">Contacter Sophie</div><div style="font-size:11px;color:#6B7280">Communication directe</div></div>
+        <button style="margin-left:auto;background:#F26419;color:#fff;border:none;padding:7px 14px;border-radius:50px;font-family:Georgia,serif;font-size:12px;font-weight:700;cursor:pointer">Appeler</button>
       </div>
     </div>
-    <div class="step-item reveal">
-      <div class="step-num">2</div>
-      <div>
-        <div class="step-title">Sélectionnez votre assistant(e)</div>
-        <div class="step-desc">Profils vérifiés, notés et disponibles près de chez vous. Lisez les avis et choisissez en toute confiance.</div>
-      </div>
-    </div>
-    <div class="step-item reveal">
-      <div class="step-num">3</div>
-      <div>
-        <div class="step-title">Confirmez & payez en ligne</div>
-        <div class="step-desc">Paiement sécurisé par carte ou CESU. Une confirmation immédiate par SMS et e-mail.</div>
-      </div>
-    </div>
-    <div class="step-item reveal">
-      <div class="step-num">4</div>
-      <div>
-        <div class="step-title">Suivez en temps réel</div>
-        <div class="step-desc">Géolocalisation live, communication directe avec l'assistant(e), et évaluation après chaque mission.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="steps-visual reveal">
-  <div style="font-size:13px;font-weight:600;color:var(--gray);letter-spacing:0.5px;margin-bottom:24px;">SUIVI EN DIRECT</div>
-  <div class="visual-timeline">
-    <div class="vt-item">
-      <div class="vt-dot">✓</div>
-      <div class="vt-text">
-        <div class="vt-title">Réservation confirmée</div>
-        <div class="vt-sub">Sophie L. a accepté votre mission</div>
-      </div>
-      <div class="vt-time">9:02</div>
-    </div>
-    <div class="vt-item">
-      <div class="vt-dot">🚶</div>
-      <div class="vt-text">
-        <div class="vt-title">En route vers vous</div>
-        <div class="vt-sub">Distance : 0.8 km</div>
-      </div>
-      <div class="vt-time">9:05</div>
-    </div>
-    <div class="vt-item">
-      <div class="vt-dot">👋</div>
-      <div class="vt-text">
-        <div class="vt-title">Arrivée chez vous</div>
-        <div class="vt-sub">Mission démarrée</div>
-      </div>
-      <div class="vt-time">9:11</div>
-    </div>
-    <div class="vt-item">
-      <div class="vt-dot">🛒</div>
-      <div class="vt-text">
-        <div class="vt-title">Courses en cours</div>
-        <div class="vt-sub">Monoprix — Rue de la Paix</div>
-      </div>
-      <div class="vt-time">9:25</div>
-    </div>
-    <div class="vt-item">
-      <div class="vt-dot" style="background:var(--orange-pale);border-color:var(--orange);animation:pulse 1.5s infinite;">⏳</div>
-      <div class="vt-text">
-        <div class="vt-title" style="color:var(--orange);">Retour prévu</div>
-        <div class="vt-sub">Dans environ 25 minutes</div>
-      </div>
-      <div class="vt-time" style="color:var(--orange);">~10:30</div>
-    </div>
-  </div>
-
-  <div style="margin-top:28px;padding:16px 20px;background:var(--orange-pale);border-radius:16px;display:flex;align-items:center;gap:14px;">
-    <span style="font-size:24px;">📞</span>
-    <div>
-      <div style="font-size:14px;font-weight:600;">Contacter Sophie</div>
-      <div style="font-size:12px;color:var(--gray);">Communication directe & sécurisée</div>
-    </div>
-    <button style="margin-left:auto;background:var(--orange);color:white;border:none;padding:8px 16px;border-radius:50px;font-family:'DM Sans';font-size:12px;font-weight:600;cursor:pointer;">Appeler</button>
-  </div>
-</div>
-```
-
   </div>
 </section>
 
-<!-- ─── POUR QUI ─── -->
+<!-- POUR QUI -->
 
 <section id="pourqui">
-  <div class="section-header reveal" style="text-align:center;max-width:600px;margin:0 auto 60px;">
-    <span class="section-tag">Notre communauté</span>
-    <h2 class="section-title">Fait pour vous.</h2>
-    <p class="section-desc" style="margin:0 auto;">QuickMi s'adresse à toutes les personnes qui ont besoin d'un coup de main bienveillant et professionnel.</p>
-  </div>
-
-  <div class="audience-grid">
-    <div class="audience-card reveal">
-      <div class="aud-emoji">👴👵</div>
-      <div class="aud-title">Personnes âgées</div>
-      <div class="aud-desc">Maintenir votre autonomie et votre qualité de vie, avec un accompagnement humain et attentionné pour chaque sortie ou démarche.</div>
-      <div class="aud-tags">
-        <span class="aud-tag">Courses</span>
-        <span class="aud-tag">Médecin</span>
-        <span class="aud-tag">Compagnie</span>
-        <span class="aud-tag">Trajets</span>
-      </div>
-    </div>
-
-```
-<div class="audience-card reveal" style="transition-delay:0.1s">
-  <div class="aud-emoji">♿</div>
-  <div class="aud-title">Personnes en situation de handicap</div>
-  <div class="aud-desc">Un soutien adapté et respectueux pour faciliter vos déplacements et votre accès aux services du quotidien.</div>
-  <div class="aud-tags">
-    <span class="aud-tag">Mobilité réduite</span>
-    <span class="aud-tag">Déplacements</span>
-    <span class="aud-tag">Aide légère</span>
-  </div>
-</div>
-
-<div class="audience-card reveal" style="transition-delay:0.2s">
-  <div class="aud-emoji">👨‍👩‍👧</div>
-  <div class="aud-title">Familles & proches aidants</div>
-  <div class="aud-desc">Offrez à votre parent âgé un accompagnement fiable quand vous n'êtes pas disponible. Tranquillité d'esprit garantie.</div>
-  <div class="aud-tags">
-    <span class="aud-tag">Parents âgés</span>
-    <span class="aud-tag">Relais familial</span>
-    <span class="aud-tag">Sérénité</span>
-  </div>
-</div>
-```
-
+  <div class="reveal" style="text-align:center;max-width:560px;margin:0 auto 0"><span class="tag">Notre communauté</span><h2>Fait pour vous.</h2><p style="font-size:16px;color:#6B7280;font-weight:300;line-height:1.7">QuickMi accompagne toutes les personnes ayant besoin d'un soutien bienveillant au quotidien.</p></div>
+  <div class="aud-grid">
+    <div class="aud-card reveal"><div class="aud-em">👴👵</div><h3>Personnes âgées</h3><p>Maintenir votre autonomie avec un accompagnement humain et attentionné pour chaque sortie.</p><div class="tags"><span class="t">Courses</span><span class="t">Médecin</span><span class="t">Compagnie</span><span class="t">Trajets</span></div></div>
+    <div class="aud-card reveal" style="transition-delay:0.1s"><div class="aud-em">♿</div><h3>Personnes en situation de handicap</h3><p>Un soutien adapté et respectueux pour faciliter vos déplacements et votre accès aux services.</p><div class="tags"><span class="t">Mobilité réduite</span><span class="t">Déplacements</span><span class="t">Aide légère</span></div></div>
+    <div class="aud-card reveal" style="transition-delay:0.2s"><div class="aud-em">👨‍👩‍👧</div><h3>Familles & proches aidants</h3><p>Offrez à votre parent un accompagnement fiable quand vous n'êtes pas disponible.</p><div class="tags"><span class="t">Parents âgés</span><span class="t">Relais familial</span><span class="t">Sérénité</span></div></div>
   </div>
 </section>
 
-<!-- ─── TÉMOIGNAGES ─── -->
+<!-- TÉMOIGNAGES -->
 
-<section id="temoignages">
-  <div class="section-header reveal" style="text-align:center;max-width:600px;margin:0 auto 60px;">
-    <span class="section-tag">Témoignages</span>
-    <h2 class="section-title">Ils nous font confiance.</h2>
-  </div>
-
-  <div class="temoignages-grid">
-    <div class="temoignage-card reveal">
-      <div class="stars">★★★★★</div>
-      <div class="temo-text">"Sophie m'a accompagnée faire mes courses au marché. Elle était d'une gentillesse et d'une patience remarquable. Je me suis sentie en sécurité tout le long."</div>
-      <div class="temo-author">
-        <div class="temo-av" style="background:linear-gradient(135deg,#F97316,#FBBF24);">MJ</div>
-        <div>
-          <div class="temo-name">Marie-Jeanne P.</div>
-          <div class="temo-role">78 ans, Lyon • Service Courses</div>
-        </div>
-      </div>
-    </div>
-
-```
-<div class="temoignage-card reveal" style="transition-delay:0.1s">
-  <div class="stars">★★★★★</div>
-  <div class="temo-text">"Ma mère a 82 ans et vit seule. QuickMi nous a permis de trouver quelqu'un de confiance pour l'accompagner chez son cardiologue. Je recommande vivement."</div>
-  <div class="temo-author">
-    <div class="temo-av" style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">PL</div>
-    <div>
-      <div class="temo-name">Pierre L.</div>
-      <div class="temo-role">52 ans, Paris • Pour sa mère</div>
-    </div>
-  </div>
-</div>
-
-<div class="temoignage-card reveal" style="transition-delay:0.2s">
-  <div class="stars">★★★★★</div>
-  <div class="temo-text">"Après mon opération du genou, j'avais besoin d'aide pour mes courses. La réservation était simple, l'assistant est arrivé en 12 minutes. Service impeccable !"</div>
-  <div class="temo-author">
-    <div class="temo-av" style="background:linear-gradient(135deg,#10B981,#34D399);">AB</div>
-    <div>
-      <div class="temo-name">Andrée B.</div>
-      <div class="temo-role">67 ans, Marseille • Service Courses</div>
-    </div>
-  </div>
-</div>
-```
-
+<section id="temo">
+  <div class="reveal" style="text-align:center"><span class="tag">Témoignages</span><h2>Ils nous font confiance.</h2></div>
+  <div class="temo-grid">
+    <div class="temo-card reveal"><div class="stars">★★★★★</div><div class="temo-txt">"Sophie m'a accompagnée faire mes courses au marché. Elle était d'une gentillesse remarquable. Je me suis sentie en sécurité tout le long."</div><div class="temo-au"><div class="temo-av" style="background:linear-gradient(135deg,#F97316,#FBBF24)">MJ</div><div><div class="temo-n">Marie-Jeanne P.</div><div class="temo-r">78 ans, Lyon • Courses</div></div></div></div>
+    <div class="temo-card reveal" style="transition-delay:0.1s"><div class="stars">★★★★★</div><div class="temo-txt">"Ma mère a 82 ans et vit seule. QuickMi nous a permis de trouver quelqu'un de confiance pour l'accompagner chez son cardiologue."</div><div class="temo-au"><div class="temo-av" style="background:linear-gradient(135deg,#3B82F6,#60A5FA)">PL</div><div><div class="temo-n">Pierre L.</div><div class="temo-r">52 ans, Paris • Pour sa mère</div></div></div></div>
+    <div class="temo-card reveal" style="transition-delay:0.2s"><div class="stars">★★★★★</div><div class="temo-txt">"Après mon opération, j'avais besoin d'aide pour mes courses. La réservation était simple, l'assistant est arrivé en 12 minutes !"</div><div class="temo-au"><div class="temo-av" style="background:linear-gradient(135deg,#10B981,#34D399)">AB</div><div><div class="temo-n">Andrée B.</div><div class="temo-r">67 ans, Marseille • Courses</div></div></div></div>
   </div>
 </section>
 
-<!-- ─── ASSISTANTS ─── -->
-
-<section id="assistants">
-  <div class="section-header reveal">
-    <span class="section-tag" style="background:rgba(242,100,25,0.15);">Notre équipe</span>
-    <h2 class="section-title">Des assistant(e)s vérifié(e)s<br>et passionné(e)s.</h2>
-    <p class="section-desc">Chaque assistant(e) QuickMi passe par une vérification d'identité, un extrait de casier judiciaire et une formation aux soins aux seniors.</p>
-  </div>
-
-  <div class="assistants-grid reveal">
-    <div class="assistant-card">
-      <div class="ast-avatar" style="background:linear-gradient(135deg,#F97316,#FBBF24);">ML</div>
-      <div class="ast-name">Marie L.</div>
-      <div class="ast-avail"><span class="dot"></span> Disponible maintenant</div>
-      <div class="ast-rating">★★★★★ 4.9 (128 avis)</div>
-      <div class="ast-tags">
-        <span class="ast-tag">Courses</span>
-        <span class="ast-tag">Rendez-vous</span>
-      </div>
-      <div class="ast-distance">📍 0.8 km de vous</div>
-    </div>
-
-```
-<div class="assistant-card" style="transition-delay:0.1s">
-  <div class="ast-avatar" style="background:linear-gradient(135deg,#3B82F6,#60A5FA);">SR</div>
-  <div class="ast-name">Sophie R.</div>
-  <div class="ast-avail"><span class="dot"></span> Disponible maintenant</div>
-  <div class="ast-rating">★★★★★ 4.8 (87 avis)</div>
-  <div class="ast-tags">
-    <span class="ast-tag">Trajets</span>
-    <span class="ast-tag">Domicile</span>
-  </div>
-  <div class="ast-distance">📍 1.2 km de vous</div>
-</div>
-
-<div class="assistant-card" style="transition-delay:0.2s">
-  <div class="ast-avatar" style="background:linear-gradient(135deg,#10B981,#34D399);">FB</div>
-  <div class="ast-name">Fatima B.</div>
-  <div class="ast-avail"><span class="dot"></span> Disponible maintenant</div>
-  <div class="ast-rating">★★★★★ 5.0 (203 avis)</div>
-  <div class="ast-tags">
-    <span class="ast-tag">Courses</span>
-    <span class="ast-tag">Domicile</span>
-  </div>
-  <div class="ast-distance">📍 1.5 km de vous</div>
-</div>
-
-<div class="assistant-card" style="transition-delay:0.3s">
-  <div class="ast-avatar" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA);">CD</div>
-  <div class="ast-name">Claire D.</div>
-  <div class="ast-avail"><span class="dot"></span> Disponible maintenant</div>
-  <div class="ast-rating">★★★★☆ 4.7 (64 avis)</div>
-  <div class="ast-tags">
-    <span class="ast-tag">Rendez-vous</span>
-    <span class="ast-tag">Trajets</span>
-  </div>
-  <div class="ast-distance">📍 2.1 km de vous</div>
-</div>
-```
-
-  </div>
-
-  <div style="text-align:center;margin-top:48px;" class="reveal">
-    <p style="color:rgba(255,255,255,0.5);margin-bottom:20px;font-size:15px;">Vous souhaitez rejoindre l'équipe QuickMi ?</p>
-    <a href="#" onclick="showModal('assistant')" class="btn-primary" style="background:white;color:var(--dark);">Devenir assistant(e) →</a>
-  </div>
-</section>
-
-<!-- ─── TARIFS ─── -->
+<!-- TARIFS -->
 
 <section id="tarifs">
-  <div class="section-header reveal" style="text-align:center;max-width:600px;margin:0 auto 60px;">
-    <span class="section-tag">Tarifs transparents</span>
-    <h2 class="section-title">Simple et sans surprise.</h2>
-    <p class="section-desc" style="margin:0 auto;">Pas d'abonnement obligatoire. Payez uniquement ce que vous utilisez. Crédit d'impôt de 50% éligible.</p>
+  <div class="reveal" style="text-align:center"><span class="tag">Tarifs transparents</span><h2>Simple et sans surprise.</h2><p style="font-size:15px;color:#6B7280;font-weight:300">Pas d'abonnement obligatoire. Crédit d'impôt de 50% éligible.</p></div>
+  <div class="tar-grid">
+    <div class="tar-card reveal"><div class="tar-name">À la demande</div><div style="display:flex;align-items:baseline;justify-content:center;gap:4px"><div class="tar-price">16€</div><div style="font-size:15px;color:#6B7280">/h</div></div><div class="tar-unit">Sans engagement</div><ul class="tar-list"><li>Aucun engagement</li><li>Réservation rapide</li><li>Assistant(e) vérifié(e)</li><li>Assurance incluse</li><li>Support téléphone</li></ul><a href="#resa" class="btn-out" style="display:block;text-align:center;padding:13px">Réserver</a></div>
+    <div class="tar-card feat reveal" style="transition-delay:0.15s"><div class="tar-badge">⭐ Le plus populaire</div><div class="tar-name" style="color:#fff">Premium</div><div style="display:flex;align-items:baseline;justify-content:center;gap:4px"><div class="tar-price">19€</div><div style="font-size:15px;color:rgba(255,255,255,0.5)">/mois</div></div><div class="tar-unit">+ 13€/h seulement</div><ul class="tar-list"><li>Tarif réduit 13€/h</li><li>Priorité de réservation</li><li>Assistants favoris</li><li>Planification récurrente</li><li>Support prioritaire 7j/7</li></ul><a href="#resa" class="btn-or" style="display:block;text-align:center;padding:13px">Essai gratuit</a></div>
+    <div class="tar-card reveal" style="transition-delay:0.3s"><div class="tar-name">Famille</div><div style="display:flex;align-items:baseline;justify-content:center;gap:4px"><div class="tar-price">29€</div><div style="font-size:15px;color:#6B7280">/mois</div></div><div class="tar-unit">Jusqu'à 3 bénéficiaires</div><ul class="tar-list"><li>3 comptes bénéficiaires</li><li>Tableau de bord famille</li><li>Notifications temps réel</li><li>Historique complet</li><li>Facturation centralisée</li></ul><a href="#resa" class="btn-out" style="display:block;text-align:center;padding:13px">Choisir</a></div>
   </div>
-
-  <div class="tarifs-grid">
-    <div class="tarif-card reveal">
-      <div class="tarif-name">À la demande</div>
-      <div style="display:flex;align-items:baseline;justify-content:center;gap:4px;">
-        <div class="tarif-price">16€</div>
-        <div style="font-size:16px;color:var(--gray);">/h</div>
-      </div>
-      <div class="tarif-unit">Tarif horaire de base</div>
-      <ul class="tarif-features">
-        <li>Aucun engagement</li>
-        <li>Réservation en quelques minutes</li>
-        <li>Assistant(e) vérifié(e)</li>
-        <li>Assurance incluse</li>
-        <li>Support par téléphone</li>
-      </ul>
-      <a href="#reservation" class="btn-outline" style="display:block;text-align:center;padding:14px;">Réserver</a>
-    </div>
-
-```
-<div class="tarif-card featured reveal" style="transition-delay:0.15s">
-  <div class="tarif-badge">⭐ Le plus populaire</div>
-  <div class="tarif-name" style="color:white;">Abonnement Premium</div>
-  <div style="display:flex;align-items:baseline;justify-content:center;gap:4px;">
-    <div class="tarif-price">19€</div>
-    <div style="font-size:16px;color:rgba(255,255,255,0.5);">/mois</div>
-  </div>
-  <div class="tarif-unit">+ tarif horaire réduit 13€/h</div>
-  <ul class="tarif-features">
-    <li>Tarif horaire réduit (13€/h)</li>
-    <li>Priorité dans la mise en relation</li>
-    <li>Assistants favoris réservables</li>
-    <li>Planification récurrente</li>
-    <li>Service client prioritaire 7j/7</li>
-    <li>Rapport mensuel d'activité</li>
-  </ul>
-  <a href="#reservation" class="btn-primary" style="display:block;text-align:center;padding:14px;">Commencer l'essai gratuit</a>
-</div>
-
-<div class="tarif-card reveal" style="transition-delay:0.3s">
-  <div class="tarif-name">Famille & Proches</div>
-  <div style="display:flex;align-items:baseline;justify-content:center;gap:4px;">
-    <div class="tarif-price">29€</div>
-    <div style="font-size:16px;color:var(--gray);">/mois</div>
-  </div>
-  <div class="tarif-unit">Jusqu'à 3 bénéficiaires</div>
-  <ul class="tarif-features">
-    <li>3 comptes bénéficiaires</li>
-    <li>Tableau de bord famille</li>
-    <li>Notifications en temps réel</li>
-    <li>Historique de toutes les missions</li>
-    <li>Facturation centralisée</li>
-  </ul>
-  <a href="#reservation" class="btn-outline" style="display:block;text-align:center;padding:14px;">Choisir ce forfait</a>
-</div>
-```
-
-  </div>
-
-  <p class="reveal" style="text-align:center;margin-top:32px;font-size:14px;color:var(--gray);">
-    💡 Crédit d'impôt de 50% applicable sur l'ensemble des prestations. <a href="#faq" style="color:var(--orange);">En savoir plus</a>
-  </p>
+  <p class="reveal" style="text-align:center;margin-top:24px;font-size:13px;color:#6B7280">💡 Crédit d'impôt 50% applicable. <a href="#faq" style="color:#F26419">En savoir plus</a></p>
 </section>
 
-<!-- ─── FAQ ─── -->
+<!-- FAQ -->
 
 <section id="faq">
-  <div class="section-header reveal" style="text-align:center;max-width:600px;margin:0 auto 56px;">
-    <span class="section-tag">Questions fréquentes</span>
-    <h2 class="section-title">Vous avez des questions ?</h2>
-  </div>
-
+  <div class="reveal" style="text-align:center"><span class="tag">FAQ</span><h2>Vous avez des questions ?</h2></div>
   <div class="faq-list">
-    <div class="faq-item reveal">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        Comment sont vérifiés les assistant(e)s ?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-a">Chaque assistant(e) QuickMi passe par une vérification d'identité complète, la fourniture d'un extrait de casier judiciaire vierge, et une formation de 4 heures aux spécificités de l'accompagnement des personnes âgées et fragiles. Nous vérifions également leurs références professionnelles.</div>
-    </div>
-
-```
-<div class="faq-item reveal">
-  <button class="faq-q" onclick="toggleFaq(this)">
-    Puis-je réserver par téléphone si je ne suis pas à l'aise avec internet ?
-    <span class="faq-icon">+</span>
-  </button>
-  <div class="faq-a">Absolument ! Notre service client est disponible par téléphone du lundi au dimanche de 8h à 20h pour vous aider à faire votre réservation. Nos conseillers sont formés pour accompagner les personnes moins à l'aise avec le digital.</div>
-</div>
-
-<div class="faq-item reveal">
-  <button class="faq-q" onclick="toggleFaq(this)">
-    Quel est le crédit d'impôt applicable ?
-    <span class="faq-icon">+</span>
-  </button>
-  <div class="faq-a">QuickMi est agréé Services à la Personne (SAP). À ce titre, 50% de vos dépenses sont déductibles de vos impôts sous forme de crédit d'impôt, dans la limite de 12 000€ par an. Concrètement, une heure à 16€ vous revient réellement à 8€.</div>
-</div>
-
-<div class="faq-item reveal">
-  <button class="faq-q" onclick="toggleFaq(this)">
-    Que se passe-t-il si l'assistant(e) annule au dernier moment ?
-    <span class="faq-icon">+</span>
-  </button>
-  <div class="faq-a">QuickMi garantit un remplacement sous 15 minutes en cas d'annulation de dernière minute. Si aucun remplacement n'est disponible, vous êtes remboursé intégralement et recevez un bon de 10€ pour votre prochaine réservation.</div>
-</div>
-
-<div class="faq-item reveal">
-  <button class="faq-q" onclick="toggleFaq(this)">
-    Comment fonctionne le paiement ?
-    <span class="faq-icon">+</span>
-  </button>
-  <div class="faq-a">Le paiement se fait en ligne par carte bancaire (100% sécurisé via Stripe) ou par chèque CESU si vous en disposez. Le montant est prélevé uniquement après la fin de la mission. Vous recevez une facture détaillée par e-mail.</div>
-</div>
-
-<div class="faq-item reveal">
-  <button class="faq-q" onclick="toggleFaq(this)">
-    Puis-je toujours avoir le même assistant(e) ?
-    <span class="faq-icon">+</span>
-  </button>
-  <div class="faq-a">Oui ! Avec l'abonnement Premium ou Famille, vous pouvez définir des assistant(e)s "favoris" qui seront prioritairement proposés lors de vos réservations. Cela permet de créer une relation de confiance durable.</div>
-</div>
-```
-
+    <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Comment sont vérifiés les assistant(e)s ?<span class="faq-ic">+</span></button><div class="faq-a">Chaque assistant(e) fournit un casier judiciaire vierge, passe une vérification d'identité complète et suit une formation aux soins aux seniors.</div></div>
+    <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Puis-je réserver par téléphone ?<span class="faq-ic">+</span></button><div class="faq-a">Oui ! Notre service client est disponible du lundi au dimanche de 8h à 20h au 01 00 00 00 00 pour vous aider à réserver sans application.</div></div>
+    <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Quel est le crédit d'impôt applicable ?<span class="faq-ic">+</span></button><div class="faq-a">QuickMi est agréé Services à la Personne. 50% de vos dépenses sont déductibles en crédit d'impôt, dans la limite de 12 000€/an.</div></div>
+    <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Que se passe-t-il si l'assistant(e) annule ?<span class="faq-ic">+</span></button><div class="faq-a">QuickMi garantit un remplacement sous 15 minutes. Sinon, remboursement intégral + bon de 10€.</div></div>
+    <div class="faq-item reveal"><button class="faq-q" onclick="toggleFaq(this)">Comment fonctionne le paiement ?<span class="faq-ic">+</span></button><div class="faq-a">Paiement sécurisé par carte ou CESU. Le montant est prélevé après la mission. Facture détaillée par email.</div></div>
   </div>
 </section>
 
-<!-- ─── RÉSERVATION ─── -->
+<!-- RÉSERVATION -->
 
-<section id="reservation">
-  <div class="resa-layout">
-    <div class="resa-form reveal">
-      <div class="form-title">Réserver maintenant ⚡</div>
-
-```
-  <div class="form-group">
-    <label class="form-label">Votre prénom et nom *</label>
-    <input type="text" class="form-input" placeholder="Marie Dupont" id="f-name">
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Téléphone *</label>
-    <input type="tel" class="form-input" placeholder="06 00 00 00 00" id="f-phone">
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Ville *</label>
-    <input type="text" class="form-input" placeholder="Paris, Lyon, Marseille…" id="f-city">
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Service souhaité *</label>
-    <div class="service-pills" id="service-pills">
-      <span class="pill" onclick="selectPill(this)">🛒 Courses</span>
-      <span class="pill" onclick="selectPill(this)">🏥 Rendez-vous</span>
-      <span class="pill" onclick="selectPill(this)">🚗 Trajet</span>
-      <span class="pill" onclick="selectPill(this)">🏠 Domicile</span>
+<section id="resa">
+  <div class="resa-grid">
+    <div class="form-card reveal">
+      <h3>Réserver maintenant ⚡</h3>
+      <div class="fg"><label class="fl">Prénom et nom *</label><input type="text" class="fi" id="f-name" placeholder="Marie Dupont"></div>
+      <div class="fg"><label class="fl">Téléphone *</label><input type="tel" class="fi" id="f-phone" placeholder="06 00 00 00 00"></div>
+      <div class="fg"><label class="fl">Ville *</label><input type="text" class="fi" id="f-city" placeholder="Paris, Lyon, Marseille…"></div>
+      <div class="fg"><label class="fl">Service souhaité</label><div class="pills" id="spills"><span class="pill" onclick="selPill(this)">🛒 Courses</span><span class="pill" onclick="selPill(this)">🏥 Rendez-vous</span><span class="pill" onclick="selPill(this)">🚗 Trajet</span><span class="pill" onclick="selPill(this)">🏠 Domicile</span></div></div>
+      <div class="fg"><label class="fl">Quand ?</label><div class="pills"><span class="pill active" onclick="selWhen(this,'now')">⚡ Maintenant</span><span class="pill" onclick="selWhen(this,'later')">📅 Date précise</span></div></div>
+      <div class="fg" id="date-f" style="display:none"><input type="datetime-local" class="fi" id="f-date"></div>
+      <div class="fg"><label class="fl">Précisions (optionnel)</label><textarea class="ft" id="f-notes" placeholder="Ex : accompagnement pharmacie puis banque…"></textarea></div>
+      <button class="fsub" onclick="submitForm()">Envoyer ma demande →</button>
+      <p style="text-align:center;font-size:11px;color:#6B7280;margin-top:12px">🔒 Rappel sous 15 minutes · Données sécurisées</p>
     </div>
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Quand ?</label>
-    <div class="service-pills">
-      <span class="pill active" onclick="selectPill(this, 'when')">⚡ Dès que possible</span>
-      <span class="pill" onclick="selectPill(this, 'when')">📅 Date précise</span>
-    </div>
-  </div>
-
-  <div class="form-group" id="date-field" style="display:none;">
-    <input type="datetime-local" class="form-input" id="f-date">
-  </div>
-
-  <div class="form-group">
-    <label class="form-label">Précisions (optionnel)</label>
-    <textarea class="form-textarea" placeholder="Ex : accompagnement à la pharmacie puis à la banque, besoin d'aide pour marcher…" id="f-notes"></textarea>
-  </div>
-
-  <button class="form-submit" onclick="submitForm()">
-    Envoyer ma demande de réservation →
-  </button>
-
-  <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:14px;">🔒 Données sécurisées · Rappel sous 15 minutes</p>
-</div>
-
-<div class="resa-info reveal" style="transition-delay:0.2s">
-  <div class="resa-info-title">Une question ? Appelez-nous.</div>
-  <div class="resa-info-desc">
-    Notre équipe est disponible du lundi au dimanche, de 8h à 20h pour vous accompagner dans votre réservation.
-  </div>
-
-  <div class="resa-features">
-    <div class="resa-feat">
-      <div class="resa-feat-icon">⚡</div>
-      <div>
-        <div class="resa-feat-title">Réponse sous 15 minutes</div>
-        <div class="resa-feat-desc">Un conseiller vous rappelle rapidement pour confirmer votre réservation.</div>
+    <div class="resa-info reveal" style="transition-delay:0.2s">
+      <h3>Une question ? Appelez-nous.</h3>
+      <p>Notre équipe est disponible du lundi au dimanche, de 8h à 20h pour vous accompagner.</p>
+      <div class="feat-list">
+        <div class="feat-item"><div class="feat-ic">⚡</div><div><h4>Réponse sous 15 minutes</h4><p>Un conseiller vous rappelle pour confirmer.</p></div></div>
+        <div class="feat-item"><div class="feat-ic">🛡️</div><div><h4>100% sécurisé & assuré</h4><p>Chaque mission est couverte par notre assurance.</p></div></div>
+        <div class="feat-item"><div class="feat-ic">💳</div><div><h4>Crédit d'impôt 50%</h4><p>Agréé Services à la Personne.</p></div></div>
+        <div class="feat-item"><div class="feat-ic">📞</div><div><h4>Réservation par téléphone</h4><p>Appelez le <strong>01 00 00 00 00</strong></p></div></div>
       </div>
     </div>
-    <div class="resa-feat">
-      <div class="resa-feat-icon">🛡️</div>
-      <div>
-        <div class="resa-feat-title">100% sécurisé & assuré</div>
-        <div class="resa-feat-desc">Chaque mission est couverte par notre assurance responsabilité civile professionnelle.</div>
-      </div>
-    </div>
-    <div class="resa-feat">
-      <div class="resa-feat-icon">💳</div>
-      <div>
-        <div class="resa-feat-title">Crédit d'impôt 50%</div>
-        <div class="resa-feat-desc">Agréé Services à la Personne. Facture détaillée pour votre déclaration fiscale.</div>
-      </div>
-    </div>
-    <div class="resa-feat">
-      <div class="resa-feat-icon">📞</div>
-      <div>
-        <div class="resa-feat-title">Réservation par téléphone</div>
-        <div class="resa-feat-desc">Pas besoin d'internet. Appelez le <strong>01 00 00 00 00</strong> pour réserver.</div>
-      </div>
-    </div>
-  </div>
-</div>
-```
-
   </div>
 </section>
 
-<!-- ─── FOOTER ─── -->
+<!-- FOOTER -->
 
 <footer>
-  <div class="footer-grid">
+  <div class="ft-grid">
     <div>
-      <div class="nav-logo" style="margin-bottom:0">
-        <div class="logo-icon">⚡</div>
-        <span class="logo-text" style="color:white">QuickMi</span>
-      </div>
-      <div class="footer-brand-desc">
-        L'aide à la personne à la demande. Des assistant(e)s vérifiés pour vous accompagner dans toutes vos sorties et démarches du quotidien.
-      </div>
-      <div class="footer-social">
-        <a class="social-btn" href="#">f</a>
-        <a class="social-btn" href="#">in</a>
-        <a class="social-btn" href="#">📷</a>
-      </div>
+      <div style="display:flex;align-items:center;gap:8px"><div class="logo-icon">⚡</div><span style="font-size:20px;font-weight:700;font-style:italic">QuickMi</span></div>
+      <div class="ft-desc">L'aide à la personne à la demande. Des assistant(e)s vérifiés pour vous accompagner au quotidien.</div>
+      <div class="ft-soc"><a class="ft-sb" href="#">f</a><a class="ft-sb" href="#">in</a><a class="ft-sb" href="#">📷</a></div>
     </div>
-
-```
-<div>
-  <div class="footer-col-title">Services</div>
-  <ul class="footer-links">
-    <li><a href="#">Courses</a></li>
-    <li><a href="#">Rendez-vous</a></li>
-    <li><a href="#">Trajets</a></li>
-    <li><a href="#">À domicile</a></li>
-  </ul>
-</div>
-
-<div>
-  <div class="footer-col-title">À propos</div>
-  <ul class="footer-links">
-    <li><a href="#">Notre histoire</a></li>
-    <li><a href="#">Comment ça marche</a></li>
-    <li><a href="#">Devenir assistant(e)</a></li>
-    <li><a href="#">Blog</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-</div>
-
-<div>
-  <div class="footer-col-title">Contact</div>
-  <ul class="footer-links">
-    <li><a href="tel:0100000000">📞 01 00 00 00 00</a></li>
-    <li><a href="/cdn-cgi/l/email-protection#22414d4c564341566253574b41494f4b0c4450">✉️ <span class="__cf_email__" data-cfemail="fe9d91908a9f9d8abe8f8b979d959397d0988c">[email&#160;protected]</span></a></li>
-    <li><a href="#">📍 Paris, France</a></li>
-  </ul>
-  <div style="margin-top:20px;padding:14px;background:rgba(242,100,25,0.12);border:1px solid rgba(242,100,25,0.2);border-radius:12px;">
-    <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:4px;">Disponible</div>
-    <div style="font-size:14px;font-weight:500;">Lun – Dim, 8h – 20h</div>
+    <div><h4 class="ft-col">Services</h4><ul class="ft-links"><li><a href="#">Courses</a></li><li><a href="#">Rendez-vous</a></li><li><a href="#">Trajets</a></li><li><a href="#">À domicile</a></li></ul></div>
+    <div><h4 class="ft-col">À propos</h4><ul class="ft-links"><li><a href="#">Notre histoire</a></li><li><a href="#">Comment ça marche</a></li><li><a href="#" onclick="openAst();return false">Devenir assistant(e)</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><h4 class="ft-col">Contact</h4><ul class="ft-links"><li><a href="tel:0100000000">📞 01 00 00 00 00</a></li><li><a href="mailto:contact@quickmi.fr">✉️ contact@quickmi.fr</a></li></ul><div style="margin-top:16px;padding:12px;background:rgba(242,100,25,0.12);border:1px solid rgba(242,100,25,0.2);border-radius:10px"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:2px">Disponible</div><div style="font-size:13px;font-weight:600">Lun–Dim, 8h–20h</div></div></div>
   </div>
-</div>
-```
-
-  </div>
-
-  <div class="footer-bottom">
-    <div class="footer-copy">© 2025 QuickMi. Tous droits réservés. Agréé Services à la Personne.</div>
-    <div class="footer-legal">
-      <a href="#">Mentions légales</a>
-      <a href="#">Politique de confidentialité</a>
-      <a href="#">CGU</a>
-    </div>
+  <div class="ft-bot">
+    <div class="ft-copy">© 2025 QuickMi. Agréé Services à la Personne.</div>
+    <div class="ft-leg"><a href="#">Mentions légales</a><a href="#">Confidentialité</a><a href="#">CGU</a></div>
   </div>
 </footer>
 
-<!-- ─── SUCCESS MODAL ─── -->
+<!-- CHAT -->
 
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-icon" id="modal-icon">✅</div>
-    <div class="modal-title" id="modal-title">Demande envoyée !</div>
-    <div class="modal-desc" id="modal-desc">Merci ! Un de nos conseillers vous rappelle dans les 15 prochaines minutes pour confirmer votre réservation.</div>
-    <button class="modal-close" onclick="closeModal()">Parfait, merci !</button>
+<button class="chat-btn" onclick="toggleChat()" id="chatBtn">💬<span class="chat-badge">1</span></button>
+
+<div class="chat-win" id="chatWin">
+  <div class="chat-hd">
+    <div class="chat-av">QM</div>
+    <div style="flex:1"><div class="chat-nm">Équipe QuickMi</div><div class="chat-st"><span class="dg"></span>En ligne</div></div>
+    <button class="chat-cl" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="msg ag"><div class="msg-av">QM</div><div class="msg-b">Bonjour ! 👋 Comment puis-je vous aider ?</div></div>
+  </div>
+  <div class="chat-qs" id="chatQs">
+    <button class="cq" onclick="qr('Je veux réserver')">🛒 Réserver</button>
+    <button class="cq" onclick="qr('Combien ça coûte')">💰 Tarifs</button>
+    <button class="cq" onclick="qr('Comment ça marche')">❓ Infos</button>
+    <button class="cq" onclick="qr('Devenir assistant')">🙋 Rejoindre</button>
+  </div>
+  <div class="chat-inp">
+    <input class="cin" id="cinput" placeholder="Votre message…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="csd" onclick="sendChat()">➤</button>
   </div>
 </div>
 
-<!-- ─── JAVASCRIPT ─── -->
+<!-- PAGE ASSISTANT -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-
-// Nav scroll effect
-window.addEventListener(‘scroll’, () => {
-const nav = document.getElementById(‘navbar’);
-nav.classList.toggle(‘scrolled’, window.scrollY > 20);
-});
-
-// Mobile menu
-function toggleMenu() {
-document.getElementById(‘mobileMenu’).classList.toggle(‘open’);
-}
-
-// Reveal on scroll
-const reveals = document.querySelectorAll(’.reveal’);
-const observer = new IntersectionObserver((entries) => {
-entries.forEach(entry => {
-if (entry.isIntersecting) {
-entry.target.classList.add(‘visible’);
-observer.unobserve(entry.target);
-}
-});
-}, { threshold: 0.1, rootMargin: ‘0px 0px -40px 0px’ });
-reveals.forEach(el => observer.observe(el));
-
-// FAQ toggle
-function toggleFaq(btn) {
-const item = btn.parentElement;
-const wasOpen = item.classList.contains(‘open’);
-document.querySelectorAll(’.faq-item’).forEach(i => i.classList.remove(‘open’));
-if (!wasOpen) item.classList.add(‘open’);
-}
-
-// Pill selection
-let selectedService = null;
-function selectPill(el, group) {
-const parent = group === ‘when’
-? document.querySelectorAll(’#reservation .service-pills’)[1]
-: document.getElementById(‘service-pills’);
-parent.querySelectorAll(’.pill’).forEach(p => p.classList.remove(‘active’));
-el.classList.add(‘active’);
-
-```
-if (group !== 'when') selectedService = el.textContent.trim();
-else {
-  const df = document.getElementById('date-field');
-  if (el.textContent.includes('Date')) df.style.display = 'block';
-  else df.style.display = 'none';
-}
-```
-
-}
-
-// Form submit — envoie par email
-function submitForm() {
-const name = document.getElementById(‘f-name’).value.trim();
-const phone = document.getElementById(‘f-phone’).value.trim();
-const city = document.getElementById(‘f-city’).value.trim();
-const notes = document.getElementById(‘f-notes’).value.trim();
-
-```
-if (!name || !phone || !city) {
-  alert('Veuillez remplir les champs obligatoires (nom, téléphone, ville).');
-  return;
-}
-
-const subject = encodeURIComponent(`Réservation QuickMi — ${name}`);
-const body = encodeURIComponent(
-  `Nouvelle demande de réservation\n\nNom : ${name}\nTéléphone : ${phone}\nVille : ${city}\nService : ${selectedService || 'Non précisé'}\nPrécisions : ${notes}`
-);
-window.location.href = `mailto:contact@quickmi.fr?subject=${subject}&body=${body}`;
-
-showModal('booking');
-```
-
-}
-
-function showModal(type) {
-const overlay = document.getElementById(‘modal’);
-if (type === ‘assistant’) {
-document.getElementById(‘modal-icon’).textContent = ‘🙌’;
-document.getElementById(‘modal-title’).textContent = ‘Super, rejoignez-nous !’;
-document.getElementById(‘modal-desc’).textContent = ‘Merci pour votre intérêt ! Envoyez votre candidature à contact@quickmi.fr avec vos disponibilités. Notre équipe reviendra vers vous sous 48h.’;
-} else {
-document.getElementById(‘modal-icon’).textContent = ‘✅’;
-document.getElementById(‘modal-title’).textContent = ‘Demande envoyée !’;
-document.getElementById(‘modal-desc’).textContent = ‘Merci ! Un de nos conseillers vous rappelle dans les 15 prochaines minutes pour confirmer votre réservation.’;
-}
-overlay.classList.add(‘show’);
-}
-
-function closeModal() {
-document.getElementById(‘modal’).classList.remove(‘show’);
-}
-
-document.getElementById(‘modal’).addEventListener(‘click’, function(e) {
-if (e.target === this) closeModal();
-});
-
-// Smooth scroll for all anchors
-document.querySelectorAll(‘a[href^=”#”]’).forEach(a => {
-a.addEventListener(‘click’, e  => {
-const target = document.querySelector(a.getAttribute(‘href’));
-if (target) {
-e.preventDefault();
-target.scrollIntoView({ behavior: ‘smooth’, block: ‘start’ });
-}
-});
-});
-
-// ─── CHAT ───
-function toggleChat() {
-const w = document.getElementById(‘chatWindow’);
-const b = document.getElementById(‘chatBubble’);
-w.classList.toggle(‘open’);
-// Remove badge on open
-const badge = b.querySelector(’.chat-badge’);
-if (badge) badge.remove();
-}
-
-const chatResponses = {
-‘réserver’: “Super ! Vous pouvez remplir le formulaire de réservation en bas de page, ou nous appeler au 01 00 00 00 00. Un conseiller vous rappelle en moins de 15 minutes ! 📞”,
-‘coûte’: “Nos tarifs démarrent à 16€/h pour un service à la demande. Avec l’abonnement Premium (19€/mois), vous bénéficiez d’un tarif réduit à 13€/h. Et 50% est déductible des impôts ! 💶”,
-‘marche’: “C’est très simple ! 1️⃣ Choisissez votre service → 2️⃣ Sélectionnez une assistante disponible → 3️⃣ Confirmez → 4️⃣ Suivez en temps réel. Moins de 5 minutes !”,
-‘assistant’: “Excellent ! 🙌 Cliquez sur ‘Devenir assistant(e)’ dans le menu pour voir toutes les conditions et postuler. Réponse sous 48h garantie !”,
-‘rejoindre’: “Excellent ! 🙌 Cliquez sur ‘Devenir assistant(e)’ dans le menu pour voir toutes les conditions et postuler. Réponse sous 48h garantie !”,
-‘default’: “Merci pour votre message ! Notre équipe va vous répondre très bientôt. Pour une réponse immédiate, appelez-nous au 01 00 00 00 00 (Lun-Dim 8h-20h). 😊”
-};
-
-function addMessage(text, type) {
-const msgs = document.getElementById(‘chatMessages’);
-const msg = document.createElement(‘div’);
-msg.className = ’msg ’ + type;
-msg.innerHTML = type === ‘agent’
-? `<div class="msg-av">QM</div><div class="msg-bubble">${text}</div>`
-: `<div class="msg-bubble">${text}</div>`;
-msgs.appendChild(msg);
-msgs.scrollTop = msgs.scrollHeight;
-}
-
-function showTyping() {
-const msgs = document.getElementById(‘chatMessages’);
-const t = document.createElement(‘div’);
-t.className = ‘msg agent’; t.id = ‘typing’;
-t.innerHTML = ‘<div class="msg-av">QM</div><div class="msg-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>’;
-msgs.appendChild(t);
-msgs.scrollTop = msgs.scrollHeight;
-}
-
-function sendChat() {
-const input = document.getElementById(‘chatInput’);
-const text = input.value.trim();
-if (!text) return;
-addMessage(text, ‘user’);
-input.value = ‘’;
-document.getElementById(‘chatQuick’).style.display = ‘none’;
-
-```
-showTyping();
-setTimeout(() => {
-  document.getElementById('typing')?.remove();
-  const lower = text.toLowerCase();
-  let response = chatResponses.default;
-  for (const [key, val] of Object.entries(chatResponses)) {
-    if (lower.includes(key)) { response = val; break; }
-  }
-  addMessage(response, 'agent');
-}, 1200);
-```
-
-}
-
-function quickReply(text) {
-document.getElementById(‘chatInput’).value = text;
-sendChat();
-}
-
-// ─── ASSISTANT PAGE ───
-function openPage(id) {
-document.getElementById(id).classList.add(‘open’);
-document.body.style.overflow = ‘hidden’;
-}
-function closePage(id) {
-document.getElementById(id).classList.remove(‘open’);
-document.body.style.overflow = ‘’;
-}
-
-function submitAssistant() {
-const prenom = document.getElementById(‘a-prenom’).value.trim();
-const nom = document.getElementById(‘a-nom’).value.trim();
-const email = document.getElementById(‘a-email’).value.trim();
-const phone = document.getElementById(‘a-phone’).value.trim();
-const city = document.getElementById(‘a-city’).value.trim();
-const cgu = document.getElementById(‘a-cgu’).checked;
-
-```
-if (!prenom || !nom || !email || !phone || !city) {
-  alert('Veuillez remplir tous les champs obligatoires.');
-  return;
-}
-if (!cgu) {
-  alert('Veuillez accepter les conditions générales.');
-  return;
-}
-
-// Simulate email send via mailto
-const services = [...document.querySelectorAll('#ast-form-section input[type=checkbox]:checked')]
-  .map(c => c.value).join(', ');
-const motiv = document.getElementById('a-motiv').value;
-const dispo = document.getElementById('a-dispo').value;
-
-const subject = encodeURIComponent(`Candidature QuickMi — ${prenom} ${nom}`);
-const body = encodeURIComponent(
-  `Nouvelle candidature assistant(e)\n\nNom : ${prenom} ${nom}\nEmail : ${email}\nTéléphone : ${phone}\nVille : ${city}\nServices : ${services}\nDisponibilités : ${dispo}\n\nMotivation :\n${motiv}`
-);
-window.location.href = `mailto:contact@quickmi.fr?subject=${subject}&body=${body}`;
-
-// Show confirmation
-closePage('assistantPage');
-document.body.style.overflow = '';
-document.getElementById('modal-icon').textContent = '🙌';
-document.getElementById('modal-title').textContent = 'Candidature envoyée !';
-document.getElementById('modal-desc').textContent = `Merci ${prenom} ! Nous avons bien reçu votre candidature et reviendrons vers vous sous 48h. Bienvenue dans l'aventure QuickMi !`;
-document.getElementById('modal').classList.add('show');
-```
-
-}
-
-</script>
-
-<!-- ─── CHAT EN DIRECT ─── -->
-
-<button class="chat-bubble" onclick="toggleChat()" id="chatBubble">
-  💬
-  <span class="chat-badge">1</span>
-</button>
-
-<div class="chat-window" id="chatWindow">
-  <div class="chat-header">
-    <div class="chat-header-av">QM</div>
-    <div style="flex:1">
-      <div class="chat-header-name">Équipe QuickMi</div>
-      <div class="chat-header-status"><span class="dot"></span> En ligne maintenant</div>
-    </div>
-    <button class="chat-close" onclick="toggleChat()">✕</button>
+<div id="astPage" style="position:fixed;inset:0;z-index:3000;background:#FAFAF7;overflow-y:auto;transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)">
+  <div style="position:sticky;top:0;background:rgba(250,250,247,0.96);backdrop-filter:blur(16px);padding:14px 5%;border-bottom:1px solid #E5E3DC;display:flex;align-items:center;gap:14px;z-index:10">
+    <button onclick="closeAst()" style="background:none;border:1.5px solid #E5E3DC;border-radius:50px;padding:8px 16px;font-family:Georgia,serif;font-size:13px;cursor:pointer">← Retour</button>
+    <span style="font-size:17px;font-weight:700;font-style:italic">Devenir assistant(e) QuickMi</span>
   </div>
-
-  <div class="chat-messages" id="chatMessages">
-    <div class="msg agent">
-      <div class="msg-av">QM</div>
-      <div class="msg-bubble">Bonjour ! 👋 Bienvenue sur QuickMi. Comment puis-je vous aider aujourd'hui ?</div>
-    </div>
-  </div>
-
-  <div class="chat-quick" id="chatQuick">
-    <button class="chat-quick-btn" onclick="quickReply('Je veux réserver un service')">🛒 Réserver</button>
-    <button class="chat-quick-btn" onclick="quickReply('Combien ça coûte ?')">💰 Tarifs</button>
-    <button class="chat-quick-btn" onclick="quickReply('Comment ça marche ?')">❓ Infos</button>
-    <button class="chat-quick-btn" onclick="quickReply('Devenir assistant rejoindre')">🙋 Rejoindre</button>
-  </div>
-
-  <div class="chat-input-area">
-    <input class="chat-input" id="chatInput" placeholder="Écrivez votre message…" onkeydown="if(event.key==='Enter')sendChat()">
-    <button class="chat-send" onclick="sendChat()">➤</button>
-  </div>
-</div>
-
-<!-- ─── PAGE DEVENIR ASSISTANT(E) ─── -->
-
-<div class="page-overlay" id="assistantPage">
-  <div class="page-nav">
-    <button class="page-back" onclick="closePage('assistantPage')">← Retour</button>
-    <div style="font-family:'Fraunces',serif;font-size:18px;font-weight:600;">Devenir assistant(e) QuickMi</div>
-  </div>
-
-  <div class="page-content">
-    <div class="ast-hero">
+  <div style="max-width:900px;margin:0 auto;padding:48px 5% 80px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-bottom:56px">
       <div>
-        <span class="section-tag">Rejoignez l'équipe</span>
-        <h2 style="font-family:'Fraunces',serif;font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-0.03em;line-height:1.1;margin-bottom:16px;">
-          Aidez les autres.<br><span style="color:var(--orange);font-style:italic;">Gagnez votre vie.</span>
-        </h2>
-        <p style="font-size:16px;color:var(--gray);line-height:1.75;font-weight:300;margin-bottom:28px;">
-          Rejoignez la communauté QuickMi. Flexibilité totale, rémunération attractive, impact humain réel.
-        </p>
-        <button class="btn-primary" onclick="document.getElementById('ast-form-section').scrollIntoView({behavior:'smooth'})">Postuler maintenant →</button>
+        <span class="tag">Rejoignez l'équipe</span>
+        <h2>Aidez les autres.<br><span class="accent">Gagnez votre vie.</span></h2>
+        <p style="font-size:16px;color:#6B7280;line-height:1.75;font-weight:300;margin-bottom:24px">Flexibilité totale, rémunération attractive, impact humain réel.</p>
+        <button class="btn-or" onclick="document.getElementById('ast-form').scrollIntoView({behavior:'smooth'})">Postuler maintenant →</button>
       </div>
-      <div style="background:white;border-radius:28px;padding:36px;box-shadow:0 20px 60px rgba(0,0,0,0.08);">
-        <div style="font-size:13px;font-weight:600;color:var(--gray);letter-spacing:0.5px;margin-bottom:16px;">TÉMOIGNAGE</div>
-        <div style="font-family:'Fraunces',serif;font-size:17px;font-style:italic;line-height:1.65;color:var(--dark);margin-bottom:20px;">"Je choisis mes horaires, j'aide des personnes formidables et je gagne bien ma vie. C'est plus qu'un travail."</div>
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#F97316,#FBBF24);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;">ML</div>
-          <div>
-            <div style="font-weight:600;font-size:14px;">Marie L.</div>
-            <div style="font-size:12px;color:var(--gray);">Assistant(e) QuickMi — Lyon · ★ 4.9</div>
+      <div style="background:#fff;border-radius:24px;padding:28px;box-shadow:0 16px 50px rgba(0,0,0,0.08)">
+        <div style="font-size:11px;font-weight:700;color:#6B7280;letter-spacing:0.5px;margin-bottom:14px">TÉMOIGNAGE</div>
+        <div style="font-size:16px;font-style:italic;line-height:1.65;color:#1C1C1C;margin-bottom:18px;font-weight:300">"Je choisis mes horaires, j'aide des personnes formidables et je gagne bien ma vie."</div>
+        <div style="display:flex;align-items:center;gap:10px"><div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#F97316,#FBBF24);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:13px">ML</div><div><div style="font-weight:700;font-size:13px">Marie L.</div><div style="font-size:11px;color:#6B7280">Assistant(e) — Lyon · ★ 4.9</div></div></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:48px">
+      <div class="aud-card" style="text-align:center;padding:22px"><div style="font-size:28px;margin-bottom:8px">💶</div><div style="font-size:22px;font-weight:800;color:#F26419;font-style:italic">13–16€/h</div><div style="font-size:12px;color:#6B7280">Rémunération nette</div></div>
+      <div class="aud-card" style="text-align:center;padding:22px"><div style="font-size:28px;margin-bottom:8px">🗓️</div><div style="font-size:22px;font-weight:800;color:#F26419;font-style:italic">100%</div><div style="font-size:12px;color:#6B7280">Flexibilité horaires</div></div>
+      <div class="aud-card" style="text-align:center;padding:22px"><div style="font-size:28px;margin-bottom:8px">🛡️</div><div style="font-size:22px;font-weight:800;color:#F26419;font-style:italic">Incluse</div><div style="font-size:12px;color:#6B7280">Assurance pro</div></div>
+      <div class="aud-card" style="text-align:center;padding:22px"><div style="font-size:28px;margin-bottom:8px">📱</div><div style="font-size:22px;font-weight:800;color:#F26419;font-style:italic">48h</div><div style="font-size:12px;color:#6B7280">Délai activation</div></div>
+    </div>
+    <div id="ast-form">
+      <h2 style="text-align:center;margin-bottom:8px">Votre candidature</h2>
+      <p style="text-align:center;color:#6B7280;margin-bottom:32px;font-size:14px">Remplissez ce formulaire, nous vous contactons sous 48h.</p>
+      <div style="background:#fff;border-radius:24px;padding:36px;box-shadow:0 20px 60px rgba(0,0,0,0.1);max-width:620px;margin:0 auto">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="fg"><label class="fl">Prénom *</label><input type="text" class="fi" id="a-prenom" placeholder="Sophie"></div>
+          <div class="fg"><label class="fl">Nom *</label><input type="text" class="fi" id="a-nom" placeholder="Martin"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="fg"><label class="fl">Email *</label><input type="email" class="fi" id="a-email" placeholder="sophie@email.com"></div>
+          <div class="fg"><label class="fl">Téléphone *</label><input type="tel" class="fi" id="a-phone" placeholder="06 00 00 00 00"></div>
+        </div>
+        <div class="fg"><label class="fl">Ville *</label><input type="text" class="fi" id="a-city" placeholder="Paris, Lyon, Marseille…"></div>
+        <div class="fg"><label class="fl">Services proposés</label>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" value="courses" style="accent-color:#F26419"><span style="font-size:13px">🛒 Courses</span></label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" value="rdv" style="accent-color:#F26419"><span style="font-size:13px">🏥 Rendez-vous</span></label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" value="trajet" style="accent-color:#F26419"><span style="font-size:13px">🚗 Trajets</span></label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" value="domicile" style="accent-color:#F26419"><span style="font-size:13px">🏠 Domicile</span></label>
           </div>
         </div>
+        <div class="fg"><label class="fl">Disponibilités</label><select class="fs" id="a-dispo"><option value="">Sélectionner…</option><option>Temps plein</option><option>Mi-temps</option><option>Quelques heures/semaine</option><option>Week-ends</option><option>Très flexible</option></select></div>
+        <div class="fg"><label class="fl">Motivation</label><textarea class="ft" id="a-motiv" placeholder="Parlez-nous de vous…"></textarea></div>
+        <div class="fg"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="a-cgu" style="accent-color:#F26419"><span style="font-size:13px">J'accepte les CGU et certifie ne pas avoir de casier judiciaire</span></label></div>
+        <button class="fsub" onclick="submitAst()">Envoyer ma candidature →</button>
+        <p style="text-align:center;font-size:11px;color:#6B7280;margin-top:12px">📧 Réponse sous 48h · Données sécurisées</p>
       </div>
     </div>
-
-```
-<h3 style="font-family:'Fraunces',serif;font-size:28px;font-weight:700;margin-bottom:24px;text-align:center;">Pourquoi nous rejoindre ?</h3>
-<div class="ast-perks">
-  <div class="ast-perk"><div class="ast-perk-icon">💶</div><div class="ast-perk-val">13–16€/h</div><div class="ast-perk-label">Rémunération nette</div></div>
-  <div class="ast-perk"><div class="ast-perk-icon">🗓️</div><div class="ast-perk-val">100%</div><div class="ast-perk-label">Flexibilité horaires</div></div>
-  <div class="ast-perk"><div class="ast-perk-icon">🛡️</div><div class="ast-perk-val">Incluse</div><div class="ast-perk-label">Assurance pro</div></div>
-  <div class="ast-perk"><div class="ast-perk-icon">🎓</div><div class="ast-perk-val">Gratuite</div><div class="ast-perk-label">Formation seniors</div></div>
-  <div class="ast-perk"><div class="ast-perk-icon">📱</div><div class="ast-perk-val">48h</div><div class="ast-perk-label">Délai d'activation</div></div>
-</div>
-
-<div id="ast-form-section">
-  <h3 style="font-family:'Fraunces',serif;font-size:32px;font-weight:700;text-align:center;margin-bottom:8px;">Votre candidature</h3>
-  <p style="text-align:center;color:var(--gray);margin-bottom:36px;">Remplissez ce formulaire, nous vous contactons sous 48h.</p>
-  <div class="ast-form-card">
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Prénom *</label><input type="text" class="form-input" id="a-prenom" placeholder="Sophie"></div>
-      <div class="form-group"><label class="form-label">Nom *</label><input type="text" class="form-input" id="a-nom" placeholder="Martin"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Email *</label><input type="email" class="form-input" id="a-email" placeholder="sophie@email.com"></div>
-      <div class="form-group"><label class="form-label">Téléphone *</label><input type="tel" class="form-input" id="a-phone" placeholder="06 00 00 00 00"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Ville *</label><input type="text" class="form-input" id="a-city" placeholder="Paris, Lyon, Marseille…"></div>
-    <div class="form-group">
-      <label class="form-label">Services proposés</label>
-      <div class="checkbox-group">
-        <label class="checkbox-item"><input type="checkbox" value="courses"><span>🛒 Accompagnement courses</span></label>
-        <label class="checkbox-item"><input type="checkbox" value="rdv"><span>🏥 Rendez-vous médicaux & administratifs</span></label>
-        <label class="checkbox-item"><input type="checkbox" value="trajet"><span>🚗 Trajets & déplacements</span></label>
-        <label class="checkbox-item"><input type="checkbox" value="domicile"><span>🏠 Aide à domicile & compagnie</span></label>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Disponibilités</label>
-      <select class="form-select" id="a-dispo">
-        <option value="">Sélectionner…</option>
-        <option>Temps plein (35h+/semaine)</option>
-        <option>Mi-temps (15-25h/semaine)</option>
-        <option>Quelques heures par semaine</option>
-        <option>Week-ends uniquement</option>
-        <option>Très flexible selon les missions</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Motivation & expérience</label>
-      <textarea class="form-textarea" id="a-motiv" placeholder="Parlez-nous de vous, de votre expérience et de votre motivation…"></textarea>
-    </div>
-    <div class="form-group">
-      <label class="checkbox-item"><input type="checkbox" id="a-cgu"><span>J'accepte les CGU et certifie ne pas avoir de casier judiciaire</span></label>
-    </div>
-    <button class="form-submit" onclick="submitAssistant()">Envoyer ma candidature →</button>
-    <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:14px;">📧 Réponse garantie sous 48h · Données sécurisées</p>
-  </div>
-</div>
-```
-
   </div>
 </div>
 
+<!-- MODAL -->
+
+<div class="modal-ov" id="modal">
+  <div class="modal">
+    <div id="m-icon" style="font-size:48px">✅</div>
+    <h3 id="m-title">Demande envoyée !</h3>
+    <p id="m-desc">Merci ! Un conseiller vous rappelle dans les 15 prochaines minutes.</p>
+    <button onclick="closeModal()">Parfait, merci !</button>
+  </div>
+</div>
+
+<script>
+// Scroll nav
+window.addEventListener('scroll',()=>{document.querySelector('nav').style.boxShadow=window.scrollY>20?'0 4px 30px rgba(0,0,0,0.08)':'none'});
+
+// Reveal
+const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');obs.unobserve(en.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}})});
+
+// FAQ
+function toggleFaq(b){const i=b.parentElement;const o=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));if(!o)i.classList.add('open')}
+
+// Pills
+let selSvc=null;
+function selPill(el){document.querySelectorAll('#spills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');selSvc=el.textContent.trim()}
+function selWhen(el,v){el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('date-f').style.display=v==='later'?'block':'none'}
+
+// Form
+function submitForm(){
+  const n=document.getElementById('f-name').value.trim();
+  const p=document.getElementById('f-phone').value.trim();
+  const c=document.getElementById('f-city').value.trim();
+  const nt=document.getElementById('f-notes').value.trim();
+  if(!n||!p||!c){alert('Veuillez remplir les champs obligatoires.');return}
+  const s=encodeURIComponent('Réservation QuickMi — '+n);
+  const b=encodeURIComponent('Nouvelle réservation\n\nNom : '+n+'\nTél : '+p+'\nVille : '+c+'\nService : '+(selSvc||'Non précisé')+'\nNotes : '+nt);
+  window.location.href='mailto:contact@quickmi.fr?subject='+s+'&body='+b;
+  showModal('booking',n);
+}
+
+// Modal
+function showModal(t,n=''){
+  const icons={booking:'✅',assistant:'🙌'};
+  const titles={booking:'Demande envoyée !',assistant:'Candidature envoyée !'};
+  const descs={booking:'Merci '+(n||'')+'! Un conseiller vous rappelle dans les 15 minutes.',assistant:'Merci ! Nous reviendrons vers vous sous 48h. Bienvenue chez QuickMi !'};
+  document.getElementById('m-icon').textContent=icons[t]||'✅';
+  document.getElementById('m-title').textContent=titles[t]||'';
+  document.getElementById('m-desc').textContent=descs[t]||'';
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+
+// Assistant page
+function openAst(){document.getElementById('astPage').style.transform='translateX(0)';document.body.style.overflow='hidden'}
+function closeAst(){document.getElementById('astPage').style.transform='translateX(100%)';document.body.style.overflow=''}
+function submitAst(){
+  const p=document.getElementById('a-prenom').value.trim();
+  const n=document.getElementById('a-nom').value.trim();
+  const e=document.getElementById('a-email').value.trim();
+  const ph=document.getElementById('a-phone').value.trim();
+  const c=document.getElementById('a-city').value.trim();
+  const cgu=document.getElementById('a-cgu').checked;
+  if(!p||!n||!e||!ph||!c){alert('Veuillez remplir tous les champs obligatoires.');return}
+  if(!cgu){alert('Veuillez accepter les conditions générales.');return}
+  const svcs=[...document.querySelectorAll('#ast-form input[type=checkbox]:checked')].map(x=>x.value).join(', ');
+  const mot=document.getElementById('a-motiv').value;
+  const sub=encodeURIComponent('Candidature QuickMi — '+p+' '+n);
+  const bod=encodeURIComponent('Candidature assistant(e)\n\nNom : '+p+' '+n+'\nEmail : '+e+'\nTél : '+ph+'\nVille : '+c+'\nServices : '+svcs+'\nMotivation : '+mot);
+  window.location.href='mailto:contact@quickmi.fr?subject='+sub+'&body='+bod;
+  closeAst();
+  showModal('assistant',p);
+}
+
+// Chat
+const cRep={'réserver':'Super ! Remplissez le formulaire en bas de page ou appelez le 01 00 00 00 00. Rappel en moins de 15 min ! 📞','coûte':'Dès 16€/h à la demande. Abonnement Premium à 19€/mois pour 13€/h. Et 50% de crédit d\'impôt ! 💶','marche':'Simple ! 1️⃣ Choisissez → 2️⃣ Sélectionnez → 3️⃣ Confirmez → 4️⃣ Suivez. Moins de 5 minutes !','assistant':'Cliquez sur "Devenir assistant(e)" dans le menu pour postuler. Réponse sous 48h ! 🙌','rejoindre':'Cliquez sur "Devenir assistant(e)" dans le menu pour postuler. Réponse sous 48h ! 🙌'};
+function toggleChat(){const w=document.getElementById('chatWin');w.classList.toggle('open');const b=document.getElementById('chatBtn').querySelector('.chat-badge');if(b)b.remove()}
+function addMsg(txt,type){const m=document.getElementById('chatMsgs');const d=document.createElement('div');d.className='msg '+type;d.innerHTML=type==='ag'?'<div class="msg-av">QM</div><div class="msg-b">'+txt+'</div>':'<div class="msg-b">'+txt+'</div>';m.appendChild(d);m.scrollTop=m.scrollHeight}
+function sendChat(){const i=document.getElementById('cinput');const t=i.value.trim();if(!t)return;addMsg(t,'u');i.value='';document.getElementById('chatQs').style.display='none';setTimeout(()=>{const l=t.toLowerCase();let r='Merci ! Notre équipe vous répondra très bientôt. Appelez le 01 00 00 00 00 pour une réponse immédiate. 😊';for(const[k,v]of Object.entries(cRep)){if(l.includes(k)){r=v;break}}addMsg(r,'ag')},1000)}
+function qr(t){document.getElementById('cinput').value=t;sendChat()}
+</script>
+
+</body>
 </html>
