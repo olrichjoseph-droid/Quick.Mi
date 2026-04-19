@@ -201,6 +201,7 @@ footer{background:#1C1C1C;color:#fff;padding:60px 5% 30px}
   </a>
   <div style="display:flex;gap:8px;align-items:center">
     <a href="#resa" class="btn-out" style="display:none" id="nav-ast" onclick="openAst()">Devenir assistant(e)</a>
+    <button onclick="openLogin('client')" class="btn-out" style="font-size:13px;padding:8px 16px">Mon espace</button>
     <a href="#resa" class="btn-or">Réserver</a>
   </div>
 </nav>
@@ -316,15 +317,117 @@ footer{background:#1C1C1C;color:#fff;padding:60px 5% 30px}
   <div class="resa-grid">
     <div class="form-card reveal">
       <h3>Réserver maintenant ⚡</h3>
+
+      <!-- Infos personnelles -->
       <div class="fg"><label class="fl">Prénom et nom *</label><input type="text" class="fi" id="f-name" placeholder="Marie Dupont"></div>
-      <div class="fg"><label class="fl">Téléphone *</label><input type="tel" class="fi" id="f-phone" placeholder="06 00 00 00 00"></div>
-      <div class="fg"><label class="fl">Ville *</label><input type="text" class="fi" id="f-city" placeholder="Paris, Lyon, Marseille…"></div>
-      <div class="fg"><label class="fl">Service souhaité</label><div class="pills" id="spills"><span class="pill" onclick="selPill(this)">🛒 Courses</span><span class="pill" onclick="selPill(this)">🏥 Rendez-vous</span><span class="pill" onclick="selPill(this)">🚗 Trajet</span><span class="pill" onclick="selPill(this)">🏠 Domicile</span></div></div>
-      <div class="fg"><label class="fl">Quand ?</label><div class="pills"><span class="pill active" onclick="selWhen(this,'now')">⚡ Maintenant</span><span class="pill" onclick="selWhen(this,'later')">📅 Date précise</span></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="fg"><label class="fl">Téléphone *</label><input type="tel" class="fi" id="f-phone" placeholder="06 00 00 00 00"></div>
+        <div class="fg"><label class="fl">Ville *</label><input type="text" class="fi" id="f-city" placeholder="Paris…"></div>
+      </div>
+
+      <!-- Choix du service avec tarifs -->
+      <div class="fg">
+        <label class="fl">Service souhaité *</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+          <div class="svc-pill" onclick="selService(this,'courses','🛒 Courses',16,3)" style="border:1.5px solid #E5E3DC;border-radius:14px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff">
+            <div style="font-size:22px;margin-bottom:4px">🛒</div>
+            <div style="font-size:13px;font-weight:700;color:#1C1C1C">Courses</div>
+            <div style="font-size:11px;color:#6B7280">1h – 3h</div>
+            <div style="font-size:14px;font-weight:800;color:#F26419;margin-top:4px">Dès 16€/h</div>
+          </div>
+          <div class="svc-pill" onclick="selService(this,'rdv','🏥 Rendez-vous',15,2)" style="border:1.5px solid #E5E3DC;border-radius:14px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff">
+            <div style="font-size:22px;margin-bottom:4px">🏥</div>
+            <div style="font-size:13px;font-weight:700;color:#1C1C1C">Rendez-vous</div>
+            <div style="font-size:11px;color:#6B7280">30min – 2h</div>
+            <div style="font-size:14px;font-weight:800;color:#F26419;margin-top:4px">Dès 15€/h</div>
+          </div>
+          <div class="svc-pill" onclick="selService(this,'trajet','🚗 Trajet',14,4)" style="border:1.5px solid #E5E3DC;border-radius:14px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff">
+            <div style="font-size:22px;margin-bottom:4px">🚗</div>
+            <div style="font-size:13px;font-weight:700;color:#1C1C1C">Trajet</div>
+            <div style="font-size:11px;color:#6B7280">Sur mesure</div>
+            <div style="font-size:14px;font-weight:800;color:#F26419;margin-top:4px">Dès 14€/h</div>
+          </div>
+          <div class="svc-pill" onclick="selService(this,'domicile','🏠 Domicile',14,4)" style="border:1.5px solid #E5E3DC;border-radius:14px;padding:14px;cursor:pointer;transition:all 0.2s;background:#fff">
+            <div style="font-size:22px;margin-bottom:4px">🏠</div>
+            <div style="font-size:13px;font-weight:700;color:#1C1C1C">À domicile</div>
+            <div style="font-size:11px;color:#6B7280">1h – 4h</div>
+            <div style="font-size:14px;font-weight:800;color:#F26419;margin-top:4px">Dès 14€/h</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Adresse prise en charge -->
+      <div class="fg">
+        <label class="fl">Adresse de prise en charge *</label>
+        <input type="text" class="fi" id="f-addr-depart" placeholder="Ex : 12 rue de la Paix, Paris 75001">
+      </div>
+
+      <!-- Destination + aller/retour (affiché si trajet ou rdv) -->
+      <div class="fg" id="f-dest-block">
+        <label class="fl">Destination *</label>
+        <input type="text" class="fi" id="f-addr-dest" placeholder="Ex : Hôpital Saint-Antoine, Paris 75012" style="margin-bottom:10px">
+        <label class="fl" style="margin-top:8px">Type de trajet</label>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <div onclick="selTrip(this,'aller')" id="trip-aller" style="flex:1;border:1.5px solid #F26419;border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:#FFF1E8">
+            <div style="font-size:18px;margin-bottom:4px">➡️</div>
+            <div style="font-size:13px;font-weight:700;color:#F26419">Aller simple</div>
+          </div>
+          <div onclick="selTrip(this,'aller-retour')" id="trip-ar" style="flex:1;border:1.5px solid #E5E3DC;border-radius:12px;padding:12px;text-align:center;cursor:pointer;background:#fff">
+            <div style="font-size:18px;margin-bottom:4px">↔️</div>
+            <div style="font-size:13px;font-weight:700;color:#6B7280">Aller-retour</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Durée estimée -->
+      <div class="fg" id="f-duree-block">
+        <label class="fl">Durée estimée</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px" id="duree-pills">
+          <span onclick="selDuree(this,1)" style="border:1.5px solid #E5E3DC;border-radius:50px;padding:7px 16px;font-size:13px;cursor:pointer;background:#fff;transition:all 0.2s">1h</span>
+          <span onclick="selDuree(this,2)" style="border:1.5px solid #E5E3DC;border-radius:50px;padding:7px 16px;font-size:13px;cursor:pointer;background:#fff;transition:all 0.2s">2h</span>
+          <span onclick="selDuree(this,3)" style="border:1.5px solid #E5E3DC;border-radius:50px;padding:7px 16px;font-size:13px;cursor:pointer;background:#fff;transition:all 0.2s">3h</span>
+          <span onclick="selDuree(this,4)" style="border:1.5px solid #E5E3DC;border-radius:50px;padding:7px 16px;font-size:13px;cursor:pointer;background:#fff;transition:all 0.2s">4h</span>
+          <span onclick="selDuree(this,0)" style="border:1.5px solid #E5E3DC;border-radius:50px;padding:7px 16px;font-size:13px;cursor:pointer;background:#fff;transition:all 0.2s">Sur mesure</span>
+        </div>
+      </div>
+
+      <!-- RÉCAPITULATIF PRIX -->
+      <div id="prix-recap" style="display:none;background:linear-gradient(135deg,#FFF1E8,#fff8f3);border:2px solid rgba(242,100,25,0.25);border-radius:16px;padding:20px;margin-bottom:16px">
+        <div style="font-size:12px;font-weight:700;color:#F26419;letter-spacing:0.5px;margin-bottom:12px">💰 ESTIMATION DU MONTANT</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;color:#6B7280" id="recap-service">Service</span>
+          <span style="font-size:13px;color:#1C1C1C" id="recap-tarif">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:13px;color:#6B7280" id="recap-duree-label">Durée estimée</span>
+          <span style="font-size:13px;color:#1C1C1C" id="recap-duree-val">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px" id="recap-trajet-row" style="display:none">
+          <span style="font-size:13px;color:#6B7280">Type de trajet</span>
+          <span style="font-size:13px;color:#1C1C1C" id="recap-trajet-val">—</span>
+        </div>
+        <div style="border-top:1px dashed rgba(242,100,25,0.3);margin:12px 0;padding-top:12px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:15px;font-weight:700;color:#1C1C1C">Montant estimé</span>
+          <span style="font-family:Georgia,serif;font-size:24px;font-weight:800;color:#F26419" id="recap-total">—</span>
+        </div>
+        <div style="font-size:11px;color:#6B7280">💡 Après crédit d'impôt 50% : <strong id="recap-apres-ci" style="color:#059669">—</strong></div>
+        <div style="font-size:10px;color:#9CA3AF;margin-top:4px">* Estimation indicative — le montant final est confirmé par votre assistant(e)</div>
+      </div>
+
+      <!-- Quand -->
+      <div class="fg"><label class="fl">Quand ?</label>
+        <div style="display:flex;gap:8px">
+          <span class="pill active" onclick="selWhen(this,'now')" style="border:1.5px solid #E5E3DC;border-radius:50px;padding:8px 16px;font-size:13px;cursor:pointer;transition:all 0.2s">⚡ Maintenant</span>
+          <span class="pill" onclick="selWhen(this,'later')" style="border:1.5px solid #E5E3DC;border-radius:50px;padding:8px 16px;font-size:13px;cursor:pointer;transition:all 0.2s;background:#fff">📅 Date précise</span>
+        </div>
+      </div>
       <div class="fg" id="date-f" style="display:none"><input type="datetime-local" class="fi" id="f-date"></div>
-      <div class="fg"><label class="fl">Précisions (optionnel)</label><textarea class="ft" id="f-notes" placeholder="Ex : accompagnement pharmacie puis banque…"></textarea></div>
-      <button class="fsub" onclick="submitForm()">Envoyer ma demande →</button>
-      <p style="text-align:center;font-size:11px;color:#6B7280;margin-top:12px">🔒 Rappel sous 15 minutes · Données sécurisées</p>
+
+      <!-- Notes -->
+      <div class="fg"><label class="fl">Précisions (optionnel)</label><textarea class="ft" id="f-notes" placeholder="Ex : accompagnement pharmacie puis banque, besoin d'aide pour marcher…"></textarea></div>
+
+      <button class="fsub" onclick="submitForm()">💳 Payer et réserver →</button>
+      <p style="text-align:center;font-size:11px;color:#6B7280;margin-top:12px">🔒 Paiement sécurisé par Stripe · Crédit d'impôt 50%</p>
     </div>
     <div class="resa-info reveal" style="transition-delay:0.2s">
       <h3>Une question ? Appelez-nous.</h3>
@@ -349,7 +452,7 @@ footer{background:#1C1C1C;color:#fff;padding:60px 5% 30px}
     </div>
     <div><h4 class="ft-col">Services</h4><ul class="ft-links"><li><a href="#">Courses</a></li><li><a href="#">Rendez-vous</a></li><li><a href="#">Trajets</a></li><li><a href="#">À domicile</a></li></ul></div>
     <div><h4 class="ft-col">À propos</h4><ul class="ft-links"><li><a href="#">Notre histoire</a></li><li><a href="#">Comment ça marche</a></li><li><a href="#" onclick="openAst();return false">Devenir assistant(e)</a></li><li><a href="#">Contact</a></li></ul></div>
-    <div><h4 class="ft-col">Contact</h4><ul class="ft-links"><li><a href="tel:0769713327">📞 07 69 71 33 27</a></li><li><a href="mailto:olrich.josep@gmail.com">✉️ olrich.josep@gmail.com</a></li></ul><div style="margin-top:16px;padding:12px;background:rgba(242,100,25,0.12);border:1px solid rgba(242,100,25,0.2);border-radius:10px"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:2px">Disponible</div><div style="font-size:13px;font-weight:600">Lun–Dim, 8h–20h</div></div></div>
+    <div><h4 class="ft-col">Contact</h4><ul class="ft-links"><li><a href="tel:0769713327">📞 07 69 71 33 27</a></li><li><a href="mailto:goquick.mi@gmail.com">✉️ goquick.mi@gmail.com</a></li></ul><div style="margin-top:16px;padding:12px;background:rgba(242,100,25,0.12);border:1px solid rgba(242,100,25,0.2);border-radius:10px"><div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:2px">Disponible</div><div style="font-size:13px;font-weight:600">Lun–Dim, 8h–20h</div></div></div>
   </div>
   <div class="ft-bot">
     <div class="ft-copy">© 2025 QuickMi. Agréé Services à la Personne.</div>
@@ -455,28 +558,152 @@ window.addEventListener('scroll',()=>{document.querySelector('nav').style.boxSha
 const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');obs.unobserve(en.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'})}})});
+// ─── SERVICE SELECTION & PRICE CALCULATOR ───
+let selSvc = null, selSvcId = null, selTarif = 0, selMaxH = 1, selDureeH = 0, selTripType = 'aller';
 
-// FAQ
-function toggleFaq(b){const i=b.parentElement;const o=i.classList.contains('open');document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('open'));if(!o)i.classList.add('open')}
+// LIENS DE PAIEMENT STRIPE
+const STRIPE_LINKS = {
+  'courses': 'https://buy.stripe.com/3cIbJ02XHf6R6XdbgA5os00',
+  'rdv': 'https://buy.stripe.com/4gM3cubud0bX3L10BW5os01',
+  'trajet-aller': 'https://buy.stripe.com/8x29ASeGp2k5gxN70k5os02',
+  'trajet-ar': 'https://buy.stripe.com/bJe6oGdClaQBbdtgAU5os03',
+  'domicile': 'https://buy.stripe.com/9B6aEWgOxe2NepF0BW5os04'
+};
 
-// Pills
-let selSvc=null;
-function selPill(el){document.querySelectorAll('#spills .pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');selSvc=el.textContent.trim()}
-function selWhen(el,v){el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('date-f').style.display=v==='later'?'block':'none'}
+function selService(el, id, label, tarif, maxH) {
+  document.querySelectorAll('.svc-pill').forEach(p => {
+    p.style.borderColor = '#E5E3DC';
+    p.style.background = '#fff';
+    p.querySelector('div:last-child').style.color = '#F26419';
+  });
+  el.style.borderColor = '#F26419';
+  el.style.background = '#FFF1E8';
+  selSvc = label; selSvcId = id; selTarif = tarif; selMaxH = maxH;
+
+  // Show/hide destination block
+  const showDest = (id === 'trajet' || id === 'rdv');
+  document.getElementById('f-dest-block').style.display = showDest ? 'block' : 'none';
+  document.getElementById('f-duree-block').style.display = 'block';
+
+  updatePrix();
+}
+
+function selDuree(el, h) {
+  document.querySelectorAll('#duree-pills span').forEach(s => {
+    s.style.background = '#fff'; s.style.borderColor = '#E5E3DC'; s.style.color = '#1C1C1C'; s.style.fontWeight = '400';
+  });
+  el.style.background = '#FFF1E8'; el.style.borderColor = '#F26419'; el.style.color = '#F26419'; el.style.fontWeight = '700';
+  selDureeH = h;
+  updatePrix();
+}
+
+function selTrip(el, type) {
+  selTripType = type;
+  document.getElementById('trip-aller').style.borderColor = type === 'aller' ? '#F26419' : '#E5E3DC';
+  document.getElementById('trip-aller').style.background = type === 'aller' ? '#FFF1E8' : '#fff';
+  document.getElementById('trip-aller').querySelector('div:last-child').style.color = type === 'aller' ? '#F26419' : '#6B7280';
+  document.getElementById('trip-ar').style.borderColor = type === 'aller-retour' ? '#F26419' : '#E5E3DC';
+  document.getElementById('trip-ar').style.background = type === 'aller-retour' ? '#FFF1E8' : '#fff';
+  document.getElementById('trip-ar').querySelector('div:last-child').style.color = type === 'aller-retour' ? '#F26419' : '#6B7280';
+  updatePrix();
+}
+
+function updatePrix() {
+  if (!selSvc || !selTarif) return;
+  const recap = document.getElementById('prix-recap');
+  recap.style.display = 'block';
+  document.getElementById('recap-service').textContent = selSvc;
+  document.getElementById('recap-tarif').textContent = selTarif + '€/heure';
+
+  let dureeLabel = '—', dureeVal = 0;
+  if (selDureeH > 0) {
+    dureeLabel = selDureeH + 'h'; dureeVal = selDureeH;
+  } else if (selDureeH === 0 && document.querySelector('#duree-pills span[style*="#F26419"]')) {
+    dureeLabel = 'Sur mesure'; dureeVal = 0;
+  }
+  document.getElementById('recap-duree-val').textContent = dureeLabel;
+
+  // Trip type
+  const tripRow = document.getElementById('recap-trajet-row');
+  const destBlock = document.getElementById('f-dest-block');
+  if (destBlock.style.display !== 'none') {
+    tripRow.style.display = 'flex';
+    document.getElementById('recap-trajet-val').textContent = selTripType === 'aller-retour' ? '↔️ Aller-retour (×2)' : '➡️ Aller simple';
+  } else {
+    tripRow.style.display = 'none';
+  }
+
+  // Calculate total
+  if (dureeVal > 0) {
+    let total = selTarif * dureeVal;
+    if (selTripType === 'aller-retour' && destBlock.style.display !== 'none') total *= 2;
+    document.getElementById('recap-total').textContent = total + '€';
+    document.getElementById('recap-apres-ci').textContent = (total / 2).toFixed(0) + '€ (crédit impôt 50%)';
+  } else {
+    document.getElementById('recap-total').textContent = 'Sur devis';
+    document.getElementById('recap-apres-ci').textContent = '—';
+  }
+}
+
+function selWhen(el, v) {
+  el.parentElement.querySelectorAll('span').forEach(p => {
+    p.style.background = '#fff'; p.style.borderColor = '#E5E3DC'; p.style.color = '#1C1C1C'; p.style.fontWeight = '400';
+  });
+  el.style.background = '#FFF1E8'; el.style.borderColor = '#F26419'; el.style.color = '#F26419'; el.style.fontWeight = '600';
+  document.getElementById('date-f').style.display = v === 'later' ? 'block' : 'none';
+}
 
 // Form
 function submitForm(){
   const n=document.getElementById('f-name').value.trim();
   const p=document.getElementById('f-phone').value.trim();
   const c=document.getElementById('f-city').value.trim();
+  const depart=(document.getElementById('f-addr-depart')||{value:''}).value.trim();
+  const dest=(document.getElementById('f-addr-dest')||{value:''}).value.trim();
   const nt=document.getElementById('f-notes').value.trim();
-  if(!n||!p||!c){alert('Veuillez remplir les champs obligatoires.');return}
+  if(!n||!p||!c){alert('Veuillez remplir les champs obligatoires (nom, téléphone, ville).');return}
+  if(!selSvcId){alert('Veuillez sélectionner un service.');return}
+
+  const prixEl=document.getElementById('recap-total');
+  const prix=prixEl?prixEl.textContent:'Non précisé';
+
+  // Sauvegarder la réservation
+  const list=JSON.parse(localStorage.getItem('qm_reservations')||'[]');
+  list.push({nom:n,tel:p,ville:c,service:selSvc||'',depart,dest,trajet:selTripType||'aller',prix,notes:nt,duree:selDureeH||1,date:new Date().toISOString(),status:'nouveau'});
+  localStorage.setItem('qm_reservations',JSON.stringify(list));
+
+  // Envoyer email de notification à l'admin (en arrière-plan)
   const s=encodeURIComponent('Réservation QuickMi — '+n);
-  const b=encodeURIComponent('Nouvelle réservation\n\nNom : '+n+'\nTél : '+p+'\nVille : '+c+'\nService : '+(selSvc||'Non précisé')+'\nNotes : '+nt);
-  window.location.href='mailto:olrich.josep@gmail.com?subject='+s+'&body='+b;
-  showModal('booking',n);
+  const b=encodeURIComponent('Nouvelle réservation\n\nNom : '+n+'\nTél : '+p+'\nVille : '+c+'\nService : '+(selSvc||'Non précisé')+'\nAdresse départ : '+(depart||'Non précisé')+'\n'+(dest?'Destination : '+dest+'\nType trajet : '+(selTripType||'aller')+'\n':'')+'Durée : '+(selDureeH||1)+'h\nMontant estimé : '+prix+'\nNotes : '+nt);
+
+  // Déterminer le lien Stripe selon le service
+  let stripeKey = selSvcId;
+  if(selSvcId === 'trajet'){
+    stripeKey = selTripType === 'aller-retour' ? 'trajet-ar' : 'trajet-aller';
+  }
+  const stripeLink = STRIPE_LINKS[stripeKey];
+
+  // Calculer la quantité selon la durée (pour les services horaires)
+  let quantity = selDureeH > 0 ? selDureeH : 1;
+  // Trajet aller-retour = 1 (prix déjà inclus)
+  if(stripeKey === 'trajet-ar' || stripeKey === 'trajet-aller') quantity = 1;
+
+  // Construire l'URL Stripe avec pré-remplissage des infos client
+  let url = stripeLink;
+  const params = new URLSearchParams();
+  params.append('prefilled_email', 'goquick.mi@gmail.com'); // à remplacer par email client si saisi
+  if(quantity > 1) params.append('quantity', quantity);
+  url += '?' + params.toString();
+
+  // Confirmer avec l'utilisateur avant de rediriger vers Stripe
+  const confirmed = confirm('Votre réservation :\n\n'+(selSvc||'Service')+' — '+prix+'\n'+(depart?'📍 '+depart:'')+(dest?'\n→ '+dest:'')+'\n\nVous allez être redirigé vers le paiement sécurisé Stripe. Continuer ?');
+  if(!confirmed) return;
+
+  // Envoyer email en arrière-plan (ouvre dans un autre onglet si possible)
+  fetch('mailto:goquick.mi@gmail.com?subject='+s+'&body='+b).catch(()=>{});
+
+  // Rediriger vers la page de paiement Stripe
+  window.location.href = url;
 }
 
 // Modal
@@ -508,7 +735,7 @@ function submitAst(){
   const mot=document.getElementById('a-motiv').value;
   const sub=encodeURIComponent('Candidature QuickMi — '+p+' '+n);
   const bod=encodeURIComponent('Candidature assistant(e)\n\nNom : '+p+' '+n+'\nEmail : '+e+'\nTél : '+ph+'\nVille : '+c+'\nServices : '+svcs+'\nMotivation : '+mot);
-  window.location.href='mailto:olrich.josep@gmail.com?subject='+sub+'&body='+bod;
+  window.location.href='mailto:goquick.mi@gmail.com?subject='+sub+'&body='+bod;
   closeAst();
   showModal('assistant',p);
 }
@@ -553,7 +780,7 @@ function qr(t){document.getElementById('cinput').value=t;sendChat()}
         <span style="font-family:Georgia,serif;font-size:18px;font-weight:700;font-style:italic">QuickMi Admin</span>
       </div>
       <div style="display:flex;gap:10px;align-items:center">
-        <span style="font-size:12px;color:rgba(255,255,255,0.4)">olrich.josep@gmail.com</span>
+        <span style="font-size:12px;color:rgba(255,255,255,0.4)">goquick.mi@gmail.com</span>
         <button onclick="logoutAdmin()" style="background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.6);padding:7px 14px;border-radius:50px;font-size:12px;cursor:pointer">Déconnexion</button>
       </div>
     </div>
@@ -581,10 +808,11 @@ function qr(t){document.getElementById('cinput').value=t;sendChat()}
       </div>
 
       <!-- Tabs -->
-      <div style="display:flex;gap:6px;margin-bottom:24px;background:#1A1A22;padding:6px;border-radius:14px;width:fit-content">
-        <button onclick="showTab('resa')" id="tab-resa" style="background:#F26419;color:#fff;border:none;padding:9px 20px;border-radius:10px;font-family:Georgia,serif;font-size:13px;font-weight:700;cursor:pointer">📋 Réservations</button>
-        <button onclick="showTab('ast')" id="tab-ast" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 20px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">🙋 Candidatures</button>
-        <button onclick="showTab('beta')" id="tab-beta" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 20px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">🧪 Bêta testeurs</button>
+      <div style="display:flex;gap:6px;margin-bottom:24px;background:#1A1A22;padding:6px;border-radius:14px;width:fit-content;flex-wrap:wrap">
+        <button onclick="showTab('resa')" id="tab-resa" style="background:#F26419;color:#fff;border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;font-weight:700;cursor:pointer">📋 Réservations</button>
+        <button onclick="showTab('paiements')" id="tab-paiements" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">💶 Paiements</button>
+        <button onclick="showTab('ast')" id="tab-ast" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">🙋 Candidatures</button>
+        <button onclick="showTab('beta')" id="tab-beta" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">🧪 Bêta</button>
       </div>
 
       <!-- Réservations -->
@@ -611,6 +839,86 @@ function qr(t){document.getElementById('cinput').value=t;sendChat()}
         <div id="ast-empty" style="text-align:center;padding:48px;color:rgba(255,255,255,0.3)">
           <div style="font-size:40px;margin-bottom:12px">📭</div>
           <div>Aucune candidature pour le moment</div>
+        </div>
+      </div>
+
+      <!-- PAIEMENTS ASSISTANTS -->
+      <div id="panel-paiements" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+          <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;font-style:italic">💶 Paiements aux assistant(e)s</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select id="pay-period" onchange="loadPaiements()" style="background:#1A1A22;border:1px solid rgba(255,255,255,0.1);color:#fff;border-radius:10px;padding:8px 14px;font-family:Georgia,serif;font-size:13px;cursor:pointer">
+              <option value="week">Cette semaine</option>
+              <option value="lastweek">Semaine dernière</option>
+              <option value="month">Ce mois</option>
+              <option value="all">Tout l'historique</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Résumé global -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px">
+          <div style="background:#1A1A22;border:1px solid rgba(16,185,129,0.2);border-radius:18px;padding:22px;text-align:center">
+            <div id="pay-ca" style="font-family:Georgia,serif;font-size:26px;font-weight:800;color:#10B981">0€</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">CA total</div>
+          </div>
+          <div style="background:#1A1A22;border:1px solid rgba(242,100,25,0.2);border-radius:18px;padding:22px;text-align:center">
+            <div id="pay-commission" style="font-family:Georgia,serif;font-size:26px;font-weight:800;color:#F26419">0€</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">Votre commission (20%)</div>
+          </div>
+          <div style="background:#1A1A22;border:1px solid rgba(139,92,246,0.2);border-radius:18px;padding:22px;text-align:center">
+            <div id="pay-avirer" style="font-family:Georgia,serif;font-size:26px;font-weight:800;color:#8B5CF6">0€</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">À verser (80%)</div>
+          </div>
+          <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:22px;text-align:center">
+            <div id="pay-nbmissions" style="font-family:Georgia,serif;font-size:26px;font-weight:800;color:#fff">0</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px">Missions</div>
+          </div>
+        </div>
+
+        <!-- Alerte virement lundi -->
+        <div id="pay-alert" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+          <div style="font-size:24px">🗓️</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700;color:#8B5CF6;margin-bottom:2px">Prochain versement : Lundi prochain</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5)">Faites vos virements aux assistant(e)s avant 10h pour respecter le planning</div>
+          </div>
+        </div>
+
+        <!-- Tableau par assistant -->
+        <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:24px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div style="font-size:14px;font-weight:700">Récapitulatif par assistant(e)</div>
+            <button onclick="exportPaiements()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:7px 14px;border-radius:50px;font-size:12px;cursor:pointer;font-family:Georgia,serif">📥 Exporter</button>
+          </div>
+          <div id="pay-assist-list" style="display:flex;flex-direction:column;gap:10px"></div>
+          <div id="pay-empty" style="text-align:center;padding:36px;color:rgba(255,255,255,0.3)">
+            <div style="font-size:36px;margin-bottom:10px">💰</div>
+            <div>Aucun paiement à gérer</div>
+            <div style="font-size:12px;margin-top:4px">Les missions payées apparaîtront ici</div>
+          </div>
+        </div>
+
+        <!-- Détail des missions -->
+        <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:24px;margin-top:20px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px">Détail des missions de la période</div>
+          <div id="pay-missions-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
+        <!-- Gestion manuelle -->
+        <div style="background:rgba(242,100,25,0.08);border:1px solid rgba(242,100,25,0.2);border-radius:20px;padding:24px;margin-top:20px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:6px;color:#F26419">➕ Ajouter une mission manuellement</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:14px">Utile si l'assistant(e) a fait la mission sans paiement Stripe</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <input type="text" id="pm-assist" placeholder="Nom assistant(e)" style="background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;outline:none;font-family:Georgia,serif">
+            <input type="text" id="pm-iban" placeholder="IBAN (optionnel)" style="background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;outline:none;font-family:Georgia,serif">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+            <input type="text" id="pm-service" placeholder="Service" style="background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;outline:none;font-family:Georgia,serif">
+            <input type="number" id="pm-duree" placeholder="Durée (h)" style="background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;outline:none;font-family:Georgia,serif">
+            <input type="number" id="pm-montant" placeholder="Montant total €" style="background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;color:#fff;font-size:13px;outline:none;font-family:Georgia,serif">
+          </div>
+          <button onclick="addManualPaiement()" style="background:#F26419;color:#fff;border:none;padding:10px 20px;border-radius:50px;font-family:Georgia,serif;font-size:13px;font-weight:700;cursor:pointer">Ajouter la mission</button>
         </div>
       </div>
 
@@ -680,20 +988,39 @@ function renderResa(list){
   if(!list.length){el.innerHTML='';em.style.display='block';return}
   em.style.display='none';
   el.innerHTML=list.slice().reverse().map((r,i)=>`
-    <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
-      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#F26419,#FFAD70);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0">${r.nom.charAt(0)}</div>
-      <div style="flex:1">
-        <div style="font-weight:700;font-size:15px;margin-bottom:4px">${r.nom}</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:6px">📞 ${r.tel} · 📍 ${r.ville} · ${r.service||'Service non précisé'}</div>
-        ${r.notes?`<div style="font-size:12px;color:rgba(255,255,255,0.4);font-style:italic">"${r.notes}"</div>`:''}
-        <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:6px">${new Date(r.date).toLocaleString('fr-FR')}</div>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <a href="tel:${r.tel}" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);color:#3B82F6;padding:7px 14px;border-radius:50px;font-size:12px;text-decoration:none">📞 Appeler</a>
-        <button onclick="updateStatus(${list.length-1-i},'reservations','${r.status==='traité'?'nouveau':'traité'}')" style="background:rgba(${r.status==='traité'?'16,185,129':'249,115,22'},0.12);border:1px solid rgba(${r.status==='traité'?'16,185,129':'249,115,22'},0.25);color:${r.status==='traité'?'#10B981':'#F26419'};padding:7px 14px;border-radius:50px;font-size:12px;cursor:pointer">${r.status==='traité'?'✅ Traité':'⏳ À traiter'}</button>
+    <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:12px">
+      <div style="display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+        <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#F26419,#FFAD70);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0">${r.nom.charAt(0)}</div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-weight:700;font-size:15px;margin-bottom:4px">${r.nom} ${r.prix?`<span style="color:#10B981;font-size:13px;margin-left:6px">${r.prix}</span>`:''}</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:4px">📞 ${r.tel} · 📍 ${r.ville}</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:4px">${r.service||'Service non précisé'} ${r.duree?`· ${r.duree}h`:''}</div>
+          ${r.depart?`<div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px">🏠 Départ : ${r.depart}</div>`:''}
+          ${r.dest?`<div style="font-size:12px;color:rgba(255,255,255,0.4)">🎯 Arrivée : ${r.dest} ${r.trajet==='aller-retour'?'(AR)':'(aller)'}</div>`:''}
+          ${r.assistant?`<div style="font-size:12px;color:#10B981;margin-top:4px">👤 Assigné à : ${r.assistant}</div>`:`<div style="font-size:12px;color:#F26419;margin-top:4px">⚠️ Non assigné</div>`}
+          ${r.notes?`<div style="font-size:12px;color:rgba(255,255,255,0.4);font-style:italic;margin-top:4px">"${r.notes}"</div>`:''}
+          <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:6px">${new Date(r.date).toLocaleString('fr-FR')}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:140px">
+          <a href="tel:${r.tel}" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);color:#3B82F6;padding:7px 14px;border-radius:50px;font-size:12px;text-decoration:none;text-align:center">📞 Appeler</a>
+          <button onclick="assignAssistant(${list.length-1-i})" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);color:#8B5CF6;padding:7px 14px;border-radius:50px;font-size:12px;cursor:pointer">👤 Assigner</button>
+          <button onclick="updateStatus(${list.length-1-i},'reservations','${r.status==='traité'?'nouveau':'traité'}')" style="background:rgba(${r.status==='traité'?'16,185,129':'249,115,22'},0.12);border:1px solid rgba(${r.status==='traité'?'16,185,129':'249,115,22'},0.25);color:${r.status==='traité'?'#10B981':'#F26419'};padding:7px 14px;border-radius:50px;font-size:12px;cursor:pointer">${r.status==='traité'?'✅ Traité':'⏳ À traiter'}</button>
+        </div>
       </div>
     </div>
   `).join('');
+}
+
+function assignAssistant(idx){
+  const list = JSON.parse(localStorage.getItem('qm_reservations')||'[]');
+  const current = list[idx].assistant || '';
+  const name = prompt('Assigner cette mission à quel(le) assistant(e) ?\n(Tapez le prénom nom)', current);
+  if (name === null) return;
+  const iban = prompt('IBAN de l\'assistant(e) (optionnel, utile pour les virements) :', list[idx].iban || '');
+  list[idx].assistant = name.trim();
+  if (iban !== null) list[idx].iban = iban.trim();
+  localStorage.setItem('qm_reservations', JSON.stringify(list));
+  loadDash();
 }
 
 function renderAst(list){
@@ -737,13 +1064,17 @@ function renderBeta(list){
 }
 
 function showTab(t){
-  ['resa','ast','beta'].forEach(x=>{
-    document.getElementById('panel-'+x).style.display=x===t?'block':'none';
+  ['resa','paiements','ast','beta'].forEach(x=>{
+    const panel = document.getElementById('panel-'+x);
+    if(panel) panel.style.display = x===t?'block':'none';
     const btn=document.getElementById('tab-'+x);
-    btn.style.background=x===t?'#F26419':'transparent';
-    btn.style.color=x===t?'#fff':'rgba(255,255,255,0.5)';
-    if(x===t)btn.style.fontWeight='700';else btn.style.fontWeight='400';
+    if(btn){
+      btn.style.background=x===t?'#F26419':'transparent';
+      btn.style.color=x===t?'#fff':'rgba(255,255,255,0.5)';
+      if(x===t)btn.style.fontWeight='700';else btn.style.fontWeight='400';
+    }
   });
+  if(t==='paiements') loadPaiements();
 }
 
 function updateStatus(idx,key,status){
@@ -784,6 +1115,164 @@ function copyBetaLink(){
   navigator.clipboard.writeText('olrichjoseph-droid.github.io/Quick.Mi').then(()=>alert('Lien copié ! Partagez-le par WhatsApp à vos proches.'));
 }
 
+// ─── GESTION PAIEMENTS ASSISTANTS ───
+function loadPaiements(){
+  const period = document.getElementById('pay-period').value;
+  const all = JSON.parse(localStorage.getItem('qm_reservations') || '[]');
+  const manualPay = JSON.parse(localStorage.getItem('qm_paiements_manuels') || '[]');
+
+  // Filtrer par période
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay() + 1); // Lundi
+  startOfWeek.setHours(0,0,0,0);
+  const startOfLastWeek = new Date(startOfWeek);
+  startOfLastWeek.setDate(startOfWeek.getDate() - 7);
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  let filtered = [...all, ...manualPay].filter(r => {
+    const d = new Date(r.date);
+    if (period === 'week') return d >= startOfWeek;
+    if (period === 'lastweek') return d >= startOfLastWeek && d < startOfWeek;
+    if (period === 'month') return d >= startOfMonth;
+    return true;
+  });
+
+  // Calcul des totaux
+  let totalCA = 0, nbMissions = 0;
+  const parAssistant = {};
+
+  filtered.forEach(r => {
+    const prix = parseFloat((r.prix || '0').toString().replace('€','').replace(',','.').trim()) || 0;
+    if (prix === 0) return;
+    totalCA += prix;
+    nbMissions++;
+    const assistant = r.assistant || 'Non assigné';
+    if (!parAssistant[assistant]) {
+      parAssistant[assistant] = { total: 0, missions: 0, iban: r.iban || '', items: [] };
+    }
+    parAssistant[assistant].total += prix;
+    parAssistant[assistant].missions++;
+    parAssistant[assistant].items.push(r);
+  });
+
+  const commission = totalCA * 0.20;
+  const aVerser = totalCA * 0.80;
+
+  document.getElementById('pay-ca').textContent = totalCA.toFixed(2) + '€';
+  document.getElementById('pay-commission').textContent = commission.toFixed(2) + '€';
+  document.getElementById('pay-avirer').textContent = aVerser.toFixed(2) + '€';
+  document.getElementById('pay-nbmissions').textContent = nbMissions;
+
+  // Liste par assistant
+  const listEl = document.getElementById('pay-assist-list');
+  const emptyEl = document.getElementById('pay-empty');
+  const keys = Object.keys(parAssistant);
+
+  if (keys.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+  } else {
+    emptyEl.style.display = 'none';
+    listEl.innerHTML = keys.map(name => {
+      const p = parAssistant[name];
+      const toPay = p.total * 0.80;
+      const paid = JSON.parse(localStorage.getItem('qm_paid_'+name+'_'+period) || 'false');
+      return `
+        <div style="background:rgba(255,255,255,0.04);border:1px solid ${paid?'rgba(16,185,129,0.3)':'rgba(255,255,255,0.08)'};border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div style="flex:1;min-width:180px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#10B981,#34D399);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:14px">${name.charAt(0).toUpperCase()}</div>
+              <div>
+                <div style="font-size:14px;font-weight:700">${name}</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.4)">${p.missions} mission${p.missions>1?'s':''} · ${p.total.toFixed(2)}€ CA</div>
+              </div>
+            </div>
+            ${p.iban ? `<div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;margin-left:46px;font-family:monospace">IBAN : ${p.iban}</div>` : ''}
+          </div>
+          <div style="text-align:right">
+            <div style="font-family:Georgia,serif;font-size:22px;font-weight:800;color:#8B5CF6">${toPay.toFixed(2)}€</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:8px">à virer</div>
+            <button onclick="markAsPaid('${name}','${period}',${!paid})" style="background:${paid?'rgba(16,185,129,0.15)':'rgba(139,92,246,0.15)'};border:1px solid ${paid?'rgba(16,185,129,0.3)':'rgba(139,92,246,0.3)'};color:${paid?'#10B981':'#8B5CF6'};padding:6px 14px;border-radius:50px;font-size:11px;cursor:pointer;font-weight:700">${paid?'✓ Viré':'Marquer viré'}</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Détail missions
+  const missionsEl = document.getElementById('pay-missions-list');
+  if (filtered.length === 0) {
+    missionsEl.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.3);font-size:12px;padding:12px">Aucune mission sur cette période</div>';
+  } else {
+    missionsEl.innerHTML = filtered.slice().reverse().map(r => {
+      const prix = parseFloat((r.prix || '0').toString().replace('€','').replace(',','.').trim()) || 0;
+      return `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px">
+          <div>
+            <div style="font-size:13px;font-weight:600">${r.service || 'Mission'} — ${r.nom || 'Client'}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4)">${new Date(r.date).toLocaleDateString('fr-FR')} · ${r.assistant || 'Non assigné'}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:14px;font-weight:700;color:#10B981">${prix.toFixed(2)}€</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.3)">dont ${(prix*0.8).toFixed(2)}€ assistant</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+function markAsPaid(name, period, value){
+  localStorage.setItem('qm_paid_'+name+'_'+period, JSON.stringify(value));
+  loadPaiements();
+}
+
+function addManualPaiement(){
+  const assist = document.getElementById('pm-assist').value.trim();
+  const iban = document.getElementById('pm-iban').value.trim();
+  const service = document.getElementById('pm-service').value.trim();
+  const duree = document.getElementById('pm-duree').value;
+  const montant = parseFloat(document.getElementById('pm-montant').value);
+  if (!assist || !service || !montant) { alert('Remplissez assistant, service et montant'); return; }
+  const list = JSON.parse(localStorage.getItem('qm_paiements_manuels') || '[]');
+  list.push({
+    nom: 'Manuel',
+    service: service,
+    assistant: assist,
+    iban: iban,
+    duree: duree,
+    prix: montant + '€',
+    date: new Date().toISOString(),
+    status: 'traité'
+  });
+  localStorage.setItem('qm_paiements_manuels', JSON.stringify(list));
+  document.getElementById('pm-assist').value='';
+  document.getElementById('pm-iban').value='';
+  document.getElementById('pm-service').value='';
+  document.getElementById('pm-duree').value='';
+  document.getElementById('pm-montant').value='';
+  loadPaiements();
+  alert('✅ Mission ajoutée !');
+}
+
+function exportPaiements(){
+  const period = document.getElementById('pay-period').value;
+  const all = JSON.parse(localStorage.getItem('qm_reservations') || '[]');
+  const manualPay = JSON.parse(localStorage.getItem('qm_paiements_manuels') || '[]');
+  const combined = [...all, ...manualPay];
+  let csv = 'Date,Client,Service,Assistant,Montant,Part assistant (80%),Commission (20%)\n';
+  combined.forEach(r => {
+    const prix = parseFloat((r.prix || '0').toString().replace('€','').replace(',','.').trim()) || 0;
+    csv += `"${new Date(r.date).toLocaleDateString('fr-FR')}","${r.nom||''}","${r.service||''}","${r.assistant||'Non assigné'}","${prix.toFixed(2)}€","${(prix*0.8).toFixed(2)}€","${(prix*0.2).toFixed(2)}€"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'quickmi-paiements-'+period+'.csv';
+  a.click();
+}
+
 // ─── SAUVEGARDE FORMULAIRES DANS LOCALSTORAGE ───
 // Override submitForm pour sauvegarder
 const _origSubmit = submitForm;
@@ -798,7 +1287,7 @@ window.submitForm = function(){
   localStorage.setItem('qm_reservations',JSON.stringify(list));
   const s=encodeURIComponent('Réservation QuickMi — '+n);
   const b=encodeURIComponent('Nouvelle réservation\n\nNom : '+n+'\nTél : '+p+'\nVille : '+c+'\nService : '+(selSvc||'Non précisé')+'\nNotes : '+nt);
-  window.location.href='mailto:olrich.josep@gmail.com?subject='+s+'&body='+b;
+  window.location.href='mailto:goquick.mi@gmail.com?subject='+s+'&body='+b;
   showModal('booking',n);
 }
 
@@ -820,8 +1309,480 @@ window.submitAst = function(){
   localStorage.setItem('qm_candidatures',JSON.stringify(list));
   const sub=encodeURIComponent('Candidature QuickMi — '+p+' '+n);
   const bod=encodeURIComponent('Candidature assistant(e)\n\nNom : '+p+' '+n+'\nEmail : '+e+'\nTél : '+ph+'\nVille : '+c+'\nServices : '+svcs+'\nMotivation : '+mot);
-  window.location.href='mailto:olrich.josep@gmail.com?subject='+sub+'&body='+bod;
+  window.location.href='mailto:goquick.mi@gmail.com?subject='+sub+'&body='+bod;
   closeAst();
   showModal('assistant',p);
 }
+</script>
+
+<!-- ═══════════════════════════════════════
+     MODAL CONNEXION
+═══════════════════════════════════════ -->
+<div id="loginModal" style="position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s">
+  <div style="background:#fff;border-radius:28px;padding:44px;max-width:420px;width:90%;box-shadow:0 40px 80px rgba(0,0,0,0.2);transform:scale(0.9);transition:transform 0.3s" id="loginBox">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-size:40px;margin-bottom:10px" id="login-icon">👤</div>
+      <h3 style="font-family:Georgia,serif;font-size:24px;font-weight:700" id="login-title">Mon espace client</h3>
+      <p style="font-size:13px;color:#6B7280;margin-top:6px" id="login-sub">Connectez-vous pour gérer vos réservations</p>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;background:#F4F2EC;border-radius:12px;padding:4px;margin-bottom:24px">
+      <button onclick="setLoginTab('client')" id="ltab-client" style="flex:1;background:#F26419;color:#fff;border:none;padding:9px;border-radius:9px;font-family:Georgia,serif;font-size:13px;font-weight:700;cursor:pointer">Client</button>
+      <button onclick="setLoginTab('assistant')" id="ltab-assistant" style="flex:1;background:transparent;color:#6B7280;border:none;padding:9px;border-radius:9px;font-family:Georgia,serif;font-size:13px;cursor:pointer">Assistant(e)</button>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <label style="display:block;font-size:12px;font-weight:700;color:#2D2D2D;margin-bottom:6px">Email</label>
+      <input type="email" id="login-email" placeholder="votre@email.com" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:12px 14px;font-size:14px;outline:none;font-family:Georgia,serif">
+    </div>
+    <div style="margin-bottom:24px">
+      <label style="display:block;font-size:12px;font-weight:700;color:#2D2D2D;margin-bottom:6px">Mot de passe</label>
+      <input type="password" id="login-pwd" placeholder="••••••••" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:12px 14px;font-size:14px;outline:none;font-family:Georgia,serif" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div id="login-err" style="color:#EF4444;font-size:13px;margin-bottom:12px;display:none;text-align:center">Email ou mot de passe incorrect</div>
+    <button onclick="doLogin()" style="width:100%;background:#F26419;color:#fff;border:none;padding:14px;border-radius:12px;font-family:Georgia,serif;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px">Se connecter →</button>
+    <button onclick="showRegister()" style="width:100%;background:transparent;color:#F26419;border:1.5px solid rgba(242,100,25,0.3);padding:12px;border-radius:12px;font-family:Georgia,serif;font-size:14px;cursor:pointer;margin-bottom:14px">Créer un compte</button>
+    <button onclick="closeLogin()" style="width:100%;background:none;border:none;color:#6B7280;font-size:13px;cursor:pointer">← Annuler</button>
+
+    <!-- Inscription -->
+    <div id="register-form" style="display:none;border-top:1px solid #E5E3DC;margin-top:20px;padding-top:20px">
+      <div style="font-size:15px;font-weight:700;margin-bottom:16px;font-family:Georgia,serif">Créer mon compte</div>
+      <div style="margin-bottom:12px"><input type="text" id="reg-name" placeholder="Prénom Nom" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+      <div style="margin-bottom:12px"><input type="email" id="reg-email" placeholder="votre@email.com" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+      <div style="margin-bottom:12px"><input type="tel" id="reg-phone" placeholder="Téléphone" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+      <div style="margin-bottom:16px"><input type="password" id="reg-pwd" placeholder="Mot de passe" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+      <button onclick="doRegister()" style="width:100%;background:#F26419;color:#fff;border:none;padding:13px;border-radius:12px;font-family:Georgia,serif;font-size:14px;font-weight:700;cursor:pointer">Créer mon compte →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ESPACE CLIENT
+═══════════════════════════════════════ -->
+<div id="clientSpace" style="position:fixed;inset:0;z-index:4500;background:#FAFAF7;overflow-y:auto;transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)">
+
+  <!-- Nav -->
+  <div style="position:sticky;top:0;background:rgba(250,250,247,0.96);backdrop-filter:blur(16px);padding:14px 5%;border-bottom:1px solid #E5E3DC;display:flex;align-items:center;justify-content:space-between;z-index:10">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#F26419,#FFAD70);display:flex;align-items:center;justify-content:center;font-size:14px">⚡</div>
+      <span style="font-family:Georgia,serif;font-size:17px;font-weight:700;font-style:italic">Mon espace QuickMi</span>
+    </div>
+    <button onclick="logoutClient()" style="background:none;border:1.5px solid #E5E3DC;border-radius:50px;padding:7px 16px;font-family:Georgia,serif;font-size:13px;cursor:pointer;color:#6B7280">Déconnexion</button>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto;padding:36px 5% 80px">
+
+    <!-- Profil -->
+    <div style="background:#fff;border-radius:24px;padding:28px;box-shadow:0 8px 40px rgba(0,0,0,0.07);margin-bottom:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div id="client-avatar" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#F26419,#FFAD70);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;flex-shrink:0">?</div>
+      <div style="flex:1">
+        <div id="client-name" style="font-family:Georgia,serif;font-size:22px;font-weight:700">Chargement...</div>
+        <div id="client-email" style="font-size:14px;color:#6B7280;margin-top:2px"></div>
+        <div id="client-phone" style="font-size:13px;color:#F26419;margin-top:2px"></div>
+      </div>
+      <div style="background:#FFF1E8;border:1px solid rgba(242,100,25,0.2);border-radius:12px;padding:12px 20px;text-align:center">
+        <div id="client-missions-count" style="font-family:Georgia,serif;font-size:28px;font-weight:800;color:#F26419">0</div>
+        <div style="font-size:11px;color:#6B7280;margin-top:2px">Missions totales</div>
+      </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:28px">
+      <button onclick="document.getElementById('clientSpace').style.transform='translateX(100%)';document.querySelector('#resa').scrollIntoView({behavior:'smooth'})" style="background:#F26419;color:#fff;border:none;border-radius:18px;padding:20px;font-family:Georgia,serif;font-size:14px;font-weight:700;cursor:pointer;text-align:center">
+        <div style="font-size:28px;margin-bottom:8px">⚡</div>Nouvelle réservation
+      </button>
+      <button onclick="showClientTab('reservations')" style="background:#fff;border:1.5px solid #E5E3DC;border-radius:18px;padding:20px;font-family:Georgia,serif;font-size:14px;cursor:pointer;text-align:center;transition:all 0.2s">
+        <div style="font-size:28px;margin-bottom:8px">📋</div>Mes réservations
+      </button>
+      <button onclick="showClientTab('favoris')" style="background:#fff;border:1.5px solid #E5E3DC;border-radius:18px;padding:20px;font-family:Georgia,serif;font-size:14px;cursor:pointer;text-align:center;transition:all 0.2s">
+        <div style="font-size:28px;margin-bottom:8px">⭐</div>Mes favoris
+      </button>
+      <button onclick="showClientTab('profil')" style="background:#fff;border:1.5px solid #E5E3DC;border-radius:18px;padding:20px;font-family:Georgia,serif;font-size:14px;cursor:pointer;text-align:center;transition:all 0.2s">
+        <div style="font-size:28px;margin-bottom:8px">👤</div>Mon profil
+      </button>
+    </div>
+
+    <!-- Réservations -->
+    <div id="client-panel-reservations">
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:16px">Mes réservations</h3>
+      <div id="client-resa-list"></div>
+      <div id="client-resa-empty" style="text-align:center;padding:48px;background:#fff;border-radius:20px;border:1.5px dashed #E5E3DC">
+        <div style="font-size:40px;margin-bottom:12px">📭</div>
+        <div style="font-family:Georgia,serif;font-size:18px;font-weight:700;margin-bottom:8px">Aucune réservation</div>
+        <div style="font-size:14px;color:#6B7280;margin-bottom:20px">Faites votre première réservation !</div>
+        <button onclick="document.getElementById('clientSpace').style.transform='translateX(100%)'" style="background:#F26419;color:#fff;border:none;padding:12px 28px;border-radius:50px;font-family:Georgia,serif;font-size:14px;font-weight:700;cursor:pointer">Réserver maintenant →</button>
+      </div>
+    </div>
+
+    <!-- Favoris -->
+    <div id="client-panel-favoris" style="display:none">
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:16px">Mes assistant(e)s favoris</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+        <div style="background:#fff;border:1.5px solid #E5E3DC;border-radius:20px;padding:24px;text-align:center">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#F97316,#FBBF24);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:18px;margin:0 auto 12px">ML</div>
+          <div style="font-weight:700;font-size:15px">Marie L.</div>
+          <div style="font-size:12px;color:#6B7280;margin:4px 0">★ 4.9 · 128 avis</div>
+          <div style="font-size:11px;color:#F26419;margin-bottom:14px">Courses & Rendez-vous</div>
+          <button style="width:100%;background:#F26419;color:#fff;border:none;padding:9px;border-radius:50px;font-family:Georgia,serif;font-size:12px;font-weight:700;cursor:pointer">Réserver</button>
+        </div>
+        <div style="background:#fff;border:1.5px solid #E5E3DC;border-radius:20px;padding:24px;text-align:center">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#60A5FA);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:18px;margin:0 auto 12px">SR</div>
+          <div style="font-weight:700;font-size:15px">Sophie R.</div>
+          <div style="font-size:12px;color:#6B7280;margin:4px 0">★ 4.8 · 87 avis</div>
+          <div style="font-size:11px;color:#F26419;margin-bottom:14px">Trajets & Domicile</div>
+          <button style="width:100%;background:#F26419;color:#fff;border:none;padding:9px;border-radius:50px;font-family:Georgia,serif;font-size:12px;font-weight:700;cursor:pointer">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profil -->
+    <div id="client-panel-profil" style="display:none">
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:16px">Mon profil</h3>
+      <div style="background:#fff;border-radius:20px;padding:28px;box-shadow:0 8px 30px rgba(0,0,0,0.06)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <div><label style="display:block;font-size:12px;font-weight:700;color:#6B7280;margin-bottom:6px">Prénom Nom</label><input type="text" id="profil-name" class="fi" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+          <div><label style="display:block;font-size:12px;font-weight:700;color:#6B7280;margin-bottom:6px">Téléphone</label><input type="tel" id="profil-phone" class="fi" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+        </div>
+        <div style="margin-bottom:20px"><label style="display:block;font-size:12px;font-weight:700;color:#6B7280;margin-bottom:6px">Email</label><input type="email" id="profil-email" class="fi" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+        <div style="margin-bottom:20px"><label style="display:block;font-size:12px;font-weight:700;color:#6B7280;margin-bottom:6px">Adresse</label><input type="text" id="profil-addr" placeholder="Votre adresse" style="width:100%;border:1.5px solid #E5E3DC;border-radius:10px;padding:11px 14px;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+        <button onclick="saveProfil()" style="background:#F26419;color:#fff;border:none;padding:13px 32px;border-radius:50px;font-family:Georgia,serif;font-size:14px;font-weight:700;cursor:pointer">Sauvegarder les modifications</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     ESPACE ASSISTANT(E)
+═══════════════════════════════════════ -->
+<div id="assistantSpace" style="position:fixed;inset:0;z-index:4500;background:#0F0F13;color:#fff;overflow-y:auto;transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)">
+
+  <!-- Nav -->
+  <div style="position:sticky;top:0;background:rgba(15,15,19,0.96);backdrop-filter:blur(16px);padding:14px 5%;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;z-index:10">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#10B981,#34D399);display:flex;align-items:center;justify-content:center;font-size:14px">🙋</div>
+      <span style="font-family:Georgia,serif;font-size:17px;font-weight:700;font-style:italic">Mon espace assistant(e)</span>
+    </div>
+    <button onclick="logoutAssistant()" style="background:rgba(255,255,255,0.07);border:none;color:rgba(255,255,255,0.6);padding:7px 16px;border-radius:50px;font-size:13px;cursor:pointer">Déconnexion</button>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto;padding:36px 5% 80px">
+
+    <!-- Profil assistant -->
+    <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:24px;padding:28px;margin-bottom:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div id="ast-avatar-sp" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#10B981,#34D399);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#fff;flex-shrink:0">?</div>
+      <div style="flex:1">
+        <div id="ast-name-sp" style="font-family:Georgia,serif;font-size:22px;font-weight:700">Chargement...</div>
+        <div id="ast-email-sp" style="font-size:14px;color:rgba(255,255,255,0.5);margin-top:2px"></div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+          <span style="width:8px;height:8px;border-radius:50%;background:#10B981;display:inline-block"></span>
+          <span style="font-size:13px;color:#10B981">Disponible</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:14px;text-align:center">
+          <div id="ast-missions-done" style="font-family:Georgia,serif;font-size:24px;font-weight:800;color:#10B981">0</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Missions</div>
+        </div>
+        <div style="background:rgba(242,100,25,0.1);border:1px solid rgba(242,100,25,0.2);border-radius:12px;padding:14px;text-align:center">
+          <div id="ast-revenus" style="font-family:Georgia,serif;font-size:24px;font-weight:800;color:#F26419">0€</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px">Revenus</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs assistant -->
+    <div style="display:flex;gap:6px;margin-bottom:24px;background:#1A1A22;padding:6px;border-radius:14px;width:fit-content">
+      <button onclick="showAstTab('missions')" id="atab-missions" style="background:#10B981;color:#fff;border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;font-weight:700;cursor:pointer">📋 Missions</button>
+      <button onclick="showAstTab('planning')" id="atab-planning" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">📅 Planning</button>
+      <button onclick="showAstTab('revenus')" id="atab-revenus" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">💶 Revenus</button>
+      <button onclick="showAstTab('profil')" id="atab-profil" style="background:transparent;color:rgba(255,255,255,0.5);border:none;padding:9px 18px;border-radius:10px;font-family:Georgia,serif;font-size:13px;cursor:pointer">👤 Profil</button>
+    </div>
+
+    <!-- Missions -->
+    <div id="ast-panel-missions">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700">Mes missions</h3>
+        <div style="display:flex;gap:6px">
+          <span style="background:rgba(242,100,25,0.12);color:#F26419;font-size:11px;padding:4px 12px;border-radius:50px;border:1px solid rgba(242,100,25,0.2)" id="missions-pending">0 en attente</span>
+        </div>
+      </div>
+
+      <!-- Mission exemple -->
+      <div id="ast-missions-list">
+        <div style="background:#1A1A22;border:1px solid rgba(16,185,129,0.3);border-radius:16px;padding:20px;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div>
+              <div style="font-size:11px;color:#10B981;font-weight:700;letter-spacing:0.5px;margin-bottom:4px">NOUVELLE MISSION</div>
+              <div style="font-size:16px;font-weight:700">🛒 Accompagnement courses</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px">Marie-Jeanne P. · Paris 15e</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:2px">📅 Aujourd'hui · 14h00 · ~2h</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:Georgia,serif;font-size:22px;font-weight:800;color:#10B981">32€</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.3)">votre part</div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.2);color:#EF4444;padding:7px 14px;border-radius:50px;font-size:12px;cursor:pointer">Refuser</button>
+                <button style="background:#10B981;border:none;color:#fff;padding:7px 14px;border-radius:50px;font-size:12px;font-weight:700;cursor:pointer">Accepter ✓</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:12px;opacity:0.7">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+            <div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.3);font-weight:700;letter-spacing:0.5px;margin-bottom:4px">TERMINÉE</div>
+              <div style="font-size:16px;font-weight:700">🏥 Accompagnement rendez-vous</div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-top:4px">André B. · Lyon 3e</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:2px">📅 Hier · 10h00 · 1h30</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:Georgia,serif;font-size:22px;font-weight:800;color:#F26419">24€</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.3)">encaissé</div>
+              <div style="margin-top:10px"><span style="background:rgba(16,185,129,0.12);color:#10B981;font-size:11px;padding:4px 12px;border-radius:50px">★ 5/5</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Planning -->
+    <div id="ast-panel-planning" style="display:none">
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:16px">Mon planning</h3>
+      <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:24px">
+        <div style="font-size:14px;font-weight:700;margin-bottom:20px">Mes disponibilités cette semaine</div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center;margin-bottom:16px">
+          ${['L','M','M','J','V','S','D'].map((j,i)=>`<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px">${j}</div>`).join('')}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center">
+          <div style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px 4px;cursor:pointer"><div style="font-size:13px;font-weight:700">17</div><div style="font-size:9px;color:#10B981;margin-top:2px">Dispo</div></div>
+          <div style="background:rgba(242,100,25,0.15);border:1px solid rgba(242,100,25,0.3);border-radius:10px;padding:10px 4px"><div style="font-size:13px;font-weight:700">18</div><div style="font-size:9px;color:#F26419;margin-top:2px">Mission</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 4px;cursor:pointer"><div style="font-size:13px;font-weight:700">19</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px">Indispo</div></div>
+          <div style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px 4px;cursor:pointer"><div style="font-size:13px;font-weight:700">20</div><div style="font-size:9px;color:#10B981;margin-top:2px">Dispo</div></div>
+          <div style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:10px;padding:10px 4px;cursor:pointer"><div style="font-size:13px;font-weight:700">21</div><div style="font-size:9px;color:#10B981;margin-top:2px">Dispo</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 4px;cursor:pointer"><div style="font-size:13px;font-weight:700">22</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px">Indispo</div></div>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 4px;cursor:pointer"><div style="font-size:13px;font-weight:700">23</div><div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:2px">Indispo</div></div>
+        </div>
+        <div style="margin-top:20px;font-size:13px;color:rgba(255,255,255,0.4)">Appuyez sur un jour pour changer votre disponibilité</div>
+      </div>
+    </div>
+
+    <!-- Revenus -->
+    <div id="ast-panel-revenus" style="display:none">
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:16px">Mes revenus</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:20px">
+        <div style="background:#1A1A22;border:1px solid rgba(16,185,129,0.2);border-radius:18px;padding:22px;text-align:center">
+          <div style="font-family:Georgia,serif;font-size:28px;font-weight:800;color:#10B981">56€</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px">Cette semaine</div>
+        </div>
+        <div style="background:#1A1A22;border:1px solid rgba(242,100,25,0.2);border-radius:18px;padding:22px;text-align:center">
+          <div style="font-family:Georgia,serif;font-size:28px;font-weight:800;color:#F26419">224€</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px">Ce mois</div>
+        </div>
+        <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:22px;text-align:center">
+          <div style="font-family:Georgia,serif;font-size:28px;font-weight:800;color:#fff">4</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px">Missions ce mois</div>
+        </div>
+      </div>
+      <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:24px">
+        <div style="font-size:14px;font-weight:700;margin-bottom:16px">Historique des paiements</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+            <div><div style="font-size:14px;font-weight:600">🛒 Courses — Marie-Jeanne P.</div><div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:2px">Hier · 2h</div></div>
+            <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#10B981">+32€</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+            <div><div style="font-size:14px;font-weight:600">🏥 Rendez-vous — André B.</div><div style="font-size:12px;color:rgba(255,255,255,0.3);margin-top:2px">Il y a 3 jours · 1h30</div></div>
+            <div style="font-family:Georgia,serif;font-size:16px;font-weight:700;color:#10B981">+24€</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profil assistant -->
+    <div id="ast-panel-profil" style="display:none">
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;margin-bottom:16px">Mon profil assistant(e)</h3>
+      <div style="background:#1A1A22;border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:28px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+          <div><label style="display:block;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px">Prénom Nom</label><input type="text" id="ast-profil-name" style="width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+          <div><label style="display:block;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px">Téléphone</label><input type="tel" id="ast-profil-phone" style="width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:Georgia,serif"></div>
+        </div>
+        <div style="margin-bottom:14px"><label style="display:block;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:6px">Bio / Présentation</label><textarea style="width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 14px;color:#fff;font-size:14px;outline:none;font-family:Georgia,serif;min-height:90px;resize:vertical" placeholder="Parlez-vous en quelques mots..."></textarea></div>
+        <div style="margin-bottom:20px"><label style="display:block;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:8px">Services proposés</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span style="background:rgba(242,100,25,0.15);border:1px solid rgba(242,100,25,0.3);color:#F26419;padding:6px 14px;border-radius:50px;font-size:12px;cursor:pointer">🛒 Courses</span>
+            <span style="background:rgba(242,100,25,0.15);border:1px solid rgba(242,100,25,0.3);color:#F26419;padding:6px 14px;border-radius:50px;font-size:12px;cursor:pointer">🏥 Rendez-vous</span>
+            <span style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);padding:6px 14px;border-radius:50px;font-size:12px;cursor:pointer">🚗 Trajets</span>
+          </div>
+        </div>
+        <button onclick="saveAstProfil()" style="background:#10B981;color:#fff;border:none;padding:13px 32px;border-radius:50px;font-family:Georgia,serif;font-size:14px;font-weight:700;cursor:pointer">Sauvegarder</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// SYSTÈME D'AUTHENTIFICATION
+// ═══════════════════════════════════════
+let currentLoginType = 'client';
+
+function openLogin(type) {
+  currentLoginType = type || 'client';
+  setLoginTab(currentLoginType);
+  const m = document.getElementById('loginModal');
+  m.style.opacity = '1'; m.style.pointerEvents = 'all';
+  document.getElementById('loginBox').style.transform = 'scale(1)';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('register-form').style.display = 'none';
+}
+
+function closeLogin() {
+  const m = document.getElementById('loginModal');
+  m.style.opacity = '0'; m.style.pointerEvents = 'none';
+  document.getElementById('loginBox').style.transform = 'scale(0.9)';
+  document.body.style.overflow = '';
+}
+
+function setLoginTab(type) {
+  currentLoginType = type;
+  const isClient = type === 'client';
+  document.getElementById('ltab-client').style.background = isClient ? '#F26419' : 'transparent';
+  document.getElementById('ltab-client').style.color = isClient ? '#fff' : '#6B7280';
+  document.getElementById('ltab-assistant').style.background = !isClient ? '#10B981' : 'transparent';
+  document.getElementById('ltab-assistant').style.color = !isClient ? '#fff' : '#6B7280';
+  document.getElementById('login-icon').textContent = isClient ? '👤' : '🙋';
+  document.getElementById('login-title').textContent = isClient ? 'Mon espace client' : 'Mon espace assistant(e)';
+  document.getElementById('login-sub').textContent = isClient ? 'Gérez vos réservations' : 'Gérez vos missions';
+}
+
+function showRegister() {
+  const rf = document.getElementById('register-form');
+  rf.style.display = rf.style.display === 'none' ? 'block' : 'none';
+}
+
+function doRegister() {
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const phone = document.getElementById('reg-phone').value.trim();
+  const pwd = document.getElementById('reg-pwd').value;
+  if (!name || !email || !pwd) { alert('Remplissez tous les champs.'); return; }
+  const users = JSON.parse(localStorage.getItem('qm_users') || '[]');
+  if (users.find(u => u.email === email)) { alert('Cet email est déjà utilisé.'); return; }
+  users.push({ name, email, phone, pwd, type: currentLoginType, date: new Date().toISOString(), reservations: [] });
+  localStorage.setItem('qm_users', JSON.stringify(users));
+  localStorage.setItem('qm_current_user', JSON.stringify({ name, email, phone, type: currentLoginType }));
+  closeLogin();
+  openUserSpace(currentLoginType, { name, email, phone });
+}
+
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pwd = document.getElementById('login-pwd').value;
+  const users = JSON.parse(localStorage.getItem('qm_users') || '[]');
+  const user = users.find(u => u.email === email && u.pwd === pwd);
+  if (!user) { document.getElementById('login-err').style.display = 'block'; return; }
+  document.getElementById('login-err').style.display = 'none';
+  localStorage.setItem('qm_current_user', JSON.stringify(user));
+  closeLogin();
+  openUserSpace(user.type || currentLoginType, user);
+}
+
+function openUserSpace(type, user) {
+  if (type === 'assistant') {
+    document.getElementById('assistantSpace').style.transform = 'translateX(0)';
+    document.getElementById('ast-name-sp').textContent = user.name;
+    document.getElementById('ast-email-sp').textContent = user.email;
+    document.getElementById('ast-avatar-sp').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('ast-profil-name').value = user.name;
+    document.getElementById('ast-profil-phone').value = user.phone || '';
+  } else {
+    document.getElementById('clientSpace').style.transform = 'translateX(0)';
+    document.getElementById('client-name').textContent = user.name;
+    document.getElementById('client-email').textContent = user.email;
+    document.getElementById('client-phone').textContent = user.phone || '';
+    document.getElementById('client-avatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('profil-name').value = user.name;
+    document.getElementById('profil-email').value = user.email;
+    document.getElementById('profil-phone').value = user.phone || '';
+    loadClientReservations(user.email);
+  }
+  document.body.style.overflow = 'hidden';
+}
+
+function loadClientReservations(email) {
+  const all = JSON.parse(localStorage.getItem('qm_reservations') || '[]');
+  const mine = all.filter(r => r.email === email || r.nom.toLowerCase().includes(email.split('@')[0].toLowerCase()));
+  document.getElementById('client-missions-count').textContent = mine.length;
+  const list = document.getElementById('client-resa-list');
+  const empty = document.getElementById('client-resa-empty');
+  if (!mine.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  list.innerHTML = mine.slice().reverse().map(r => `
+    <div style="background:#fff;border:1.5px solid #E5E3DC;border-radius:16px;padding:20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-weight:700;font-size:15px">${r.service || '🛒 Réservation'}</div>
+        <div style="font-size:13px;color:#6B7280;margin-top:4px">📍 ${r.ville} · ${new Date(r.date).toLocaleDateString('fr-FR')}</div>
+        ${r.notes ? `<div style="font-size:12px;color:#6B7280;font-style:italic;margin-top:4px">"${r.notes}"</div>` : ''}
+      </div>
+      <span style="background:${r.status === 'traité' ? 'rgba(16,185,129,0.1)' : 'rgba(242,100,25,0.1)'};color:${r.status === 'traité' ? '#10B981' : '#F26419'};font-size:12px;padding:5px 14px;border-radius:50px;border:1px solid ${r.status === 'traité' ? 'rgba(16,185,129,0.2)' : 'rgba(242,100,25,0.2)'}">${r.status === 'traité' ? '✅ Traité' : '⏳ En cours'}</span>
+    </div>
+  `).join('');
+}
+
+function logoutClient() {
+  localStorage.removeItem('qm_current_user');
+  document.getElementById('clientSpace').style.transform = 'translateX(100%)';
+  document.body.style.overflow = '';
+}
+
+function logoutAssistant() {
+  localStorage.removeItem('qm_current_user');
+  document.getElementById('assistantSpace').style.transform = 'translateX(100%)';
+  document.body.style.overflow = '';
+}
+
+function showClientTab(tab) {
+  ['reservations','favoris','profil'].forEach(t => {
+    document.getElementById('client-panel-'+t).style.display = t === tab ? 'block' : 'none';
+  });
+}
+
+function showAstTab(tab) {
+  ['missions','planning','revenus','profil'].forEach(t => {
+    document.getElementById('ast-panel-'+t).style.display = t === tab ? 'block' : 'none';
+    const btn = document.getElementById('atab-'+t);
+    btn.style.background = t === tab ? '#10B981' : 'transparent';
+    btn.style.color = t === tab ? '#fff' : 'rgba(255,255,255,0.5)';
+    btn.style.fontWeight = t === tab ? '700' : '400';
+  });
+}
+
+function saveProfil() {
+  const user = JSON.parse(localStorage.getItem('qm_current_user') || '{}');
+  user.name = document.getElementById('profil-name').value;
+  user.email = document.getElementById('profil-email').value;
+  user.phone = document.getElementById('profil-phone').value;
+  localStorage.setItem('qm_current_user', JSON.stringify(user));
+  const users = JSON.parse(localStorage.getItem('qm_users') || '[]');
+  const idx = users.findIndex(u => u.email === user.email);
+  if (idx >= 0) { users[idx] = {...users[idx], ...user}; localStorage.setItem('qm_users', JSON.stringify(users)); }
+  alert('Profil mis à jour ! ✅');
+}
+
+function saveAstProfil() { alert('Profil assistant mis à jour ! ✅'); }
+
+// Auto-reconnect si déjà connecté
+window.addEventListener('load', () => {
+  const user = JSON.parse(localStorage.getItem('qm_current_user') || 'null');
+  if (user) {
+    const navBtn = document.querySelector('button[onclick*="openLogin"]');
+    if (navBtn) navBtn.textContent = user.name.split(' ')[0] + ' →';
+  }
+});
+
+document.getElementById('loginModal').addEventListener('click', function(e) { if(e.target === this) closeLogin(); });
 </script>
