@@ -1274,21 +1274,52 @@ function exportPaiements(){
 }
 
 // ─── SAUVEGARDE FORMULAIRES DANS LOCALSTORAGE ───
-// Override submitForm pour sauvegarder
+// Override submitForm avec paiement Stripe
 const _origSubmit = submitForm;
 window.submitForm = function(){
   const n=document.getElementById('f-name').value.trim();
   const p=document.getElementById('f-phone').value.trim();
   const c=document.getElementById('f-city').value.trim();
+  const depart=(document.getElementById('f-addr-depart')||{value:''}).value.trim();
+  const dest=(document.getElementById('f-addr-dest')||{value:''}).value.trim();
   const nt=document.getElementById('f-notes').value.trim();
-  if(!n||!p||!c){alert('Veuillez remplir les champs obligatoires.');return}
+  if(!n||!p||!c){alert('Veuillez remplir les champs obligatoires (nom, téléphone, ville).');return}
+  if(!selSvcId){alert('⚠️ Veuillez sélectionner un service (Courses, Rendez-vous, Trajet ou Domicile).');return}
+
+  const prixEl=document.getElementById('recap-total');
+  const prix=prixEl?prixEl.textContent:'Non précisé';
+
+  // Sauvegarder la réservation
   const list=JSON.parse(localStorage.getItem('qm_reservations')||'[]');
-  list.push({nom:n,tel:p,ville:c,service:selSvc||'',notes:nt,date:new Date().toISOString(),status:'nouveau'});
+  list.push({nom:n,tel:p,ville:c,service:selSvc||'',depart,dest,trajet:selTripType||'aller',prix,notes:nt,duree:selDureeH||1,date:new Date().toISOString(),status:'nouveau'});
   localStorage.setItem('qm_reservations',JSON.stringify(list));
-  const s=encodeURIComponent('Réservation QuickMi — '+n);
-  const b=encodeURIComponent('Nouvelle réservation\n\nNom : '+n+'\nTél : '+p+'\nVille : '+c+'\nService : '+(selSvc||'Non précisé')+'\nNotes : '+nt);
-  window.location.href='mailto:goquick.mi@gmail.com?subject='+s+'&body='+b;
-  showModal('booking',n);
+
+  // Déterminer le lien Stripe selon le service
+  let stripeKey = selSvcId;
+  if(selSvcId === 'trajet'){
+    stripeKey = selTripType === 'aller-retour' ? 'trajet-ar' : 'trajet-aller';
+  }
+  const stripeLink = STRIPE_LINKS[stripeKey];
+
+  if(!stripeLink){
+    alert('Erreur : lien de paiement introuvable. Contactez-nous au 07 69 71 33 27');
+    return;
+  }
+
+  // Calculer la quantité selon la durée
+  let quantity = selDureeH > 0 ? selDureeH : 1;
+  if(stripeKey === 'trajet-ar' || stripeKey === 'trajet-aller') quantity = 1;
+
+  // Construire l'URL Stripe avec quantité
+  let url = stripeLink;
+  if(quantity > 1) url += '?quantity=' + quantity;
+
+  // Confirmer avec l'utilisateur
+  const confirmed = confirm('📋 Votre réservation :\n\n'+(selSvc||'Service')+'\n⏱️ Durée : '+quantity+'h\n💰 Montant : '+prix+'\n'+(depart?'🏠 Départ : '+depart:'')+(dest?'\n🎯 Arrivée : '+dest:'')+'\n\n💳 Vous allez être redirigé vers le paiement sécurisé Stripe.\n\nContinuer ?');
+  if(!confirmed) return;
+
+  // Rediriger vers Stripe
+  window.location.href = url;
 }
 
 // Override submitAst pour sauvegarder
